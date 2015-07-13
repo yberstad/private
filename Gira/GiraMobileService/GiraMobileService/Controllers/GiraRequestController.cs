@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Controllers;
@@ -6,6 +7,7 @@ using System.Web.Http.OData;
 using Microsoft.WindowsAzure.Mobile.Service;
 using GiraMobileService.DataObjects;
 using GiraMobileService.Models;
+using Microsoft.WindowsAzure.Mobile.Service.Security;
 
 namespace GiraMobileService.Controllers
 {
@@ -18,35 +20,47 @@ namespace GiraMobileService.Controllers
             DomainManager = new EntityDomainManager<GiraRequest>(context, Request, Services);
         }
 
-        // GET tables/TodoItem
-        public IQueryable<GiraRequest> GetGiraRequestList()
+        // GET tables/GiraRequest
+        public IQueryable<GiraRequest> GetAllGiraRequest()
         {
-            return Query();
+            return Query(); 
         }
 
-        // GET tables/TodoItem/48D68C86-6EA6-4C25-AA33-223FC9A27959
+        // GET tables/GiraRequest/48D68C86-6EA6-4C25-AA33-223FC9A27959
         public SingleResult<GiraRequest> GetGiraRequest(string id)
         {
             return Lookup(id);
         }
 
-        // PATCH tables/TodoItem/48D68C86-6EA6-4C25-AA33-223FC9A27959
+        // PATCH tables/GiraRequest/48D68C86-6EA6-4C25-AA33-223FC9A27959
+        [AuthorizeLevel(AuthorizationLevel.User)]
         public Task<GiraRequest> PatchGiraRequest(string id, Delta<GiraRequest> patch)
         {
+            ServiceUser user = User as ServiceUser;
+            if (user == null)
+            {
+                throw new InvalidOperationException("This can only be called by authenticated clients");
+            }
+
+
             return UpdateAsync(id, patch);
         }
 
-        // POST tables/TodoItem
+        // POST tables/GiraRequest
+        [AuthorizeLevel(AuthorizationLevel.User)]
         public async Task<IHttpActionResult> PostGiraRequest(GiraRequest item)
         {
             GiraRequest current = await InsertAsync(item);
             return CreatedAtRoute("Tables", new { id = current.Id }, current);
         }
 
-        // DELETE tables/TodoItem/48D68C86-6EA6-4C25-AA33-223FC9A27959
+        // DELETE tables/GiraRequest/48D68C86-6EA6-4C25-AA33-223FC9A27959
         public Task DeleteGiraRequest(string id)
         {
-            return DeleteAsync(id);
+             return DeleteAsync(id);
         }
+
+
+
     }
 }

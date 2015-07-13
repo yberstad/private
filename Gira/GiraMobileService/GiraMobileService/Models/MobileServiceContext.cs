@@ -46,6 +46,12 @@ namespace GiraMobileService.Models
                 new AttributeToColumnAnnotationConvention<TableColumnAttribute, string>(
                     "ServiceTableColumn", (property, attributes) => attributes.Single().ColumnType.ToString()));
         }
+
+        public System.Data.Entity.DbSet<GiraMobileService.DataObjects.GiraSubscription> GiraSubscriptions { get; set; }
+
+        public System.Data.Entity.DbSet<GiraMobileService.DataObjects.GiraRequest> GiraRequests { get; set; }
+
+        public System.Data.Entity.DbSet<GiraMobileService.DataObjects.GiraRequestAcknowledge> GiraRequestAcknowledges { get; set; }
     }
 
 }

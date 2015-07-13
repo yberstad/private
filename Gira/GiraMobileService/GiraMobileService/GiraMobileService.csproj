@@ -185,8 +185,11 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AppCode\Services\UserService.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\GiraRequestAcknowledgeController.cs" />
     <Compile Include="Controllers\GiraRequestController.cs" />
+    <Compile Include="Controllers\GiraSubscriptionController.cs" />
     <Compile Include="DataObjects\GiraRequest.cs" />
     <Compile Include="DataObjects\GiraRequestAcknowledge.cs" />
     <Compile Include="DataObjects\GiraSubscription.cs" />
