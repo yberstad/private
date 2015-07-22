@@ -13,7 +13,7 @@ namespace GiraMobileService.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201507081111519_Initial"; }
+            get { return "201507152020283_Initial"; }
         }
         
         string IMigrationMetadata.Source

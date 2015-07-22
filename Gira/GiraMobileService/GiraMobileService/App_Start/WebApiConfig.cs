@@ -19,6 +19,8 @@ namespace GiraMobileService
             // line. Comment it out again when you deploy your service for production use.  
             config.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
 
+            config.SetIsHosted(true);
+
             var migrator = new DbMigrator(new Configuration());
             migrator.Update();
         }

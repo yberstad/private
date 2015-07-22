@@ -10,59 +10,6 @@ namespace GiraMobileService.Migrations
         public override void Up()
         {
             CreateTable(
-                "GiraMobileService.GiraRequests",
-                c => new
-                    {
-                        Id = c.String(nullable: false, maxLength: 128,
-                            annotations: new Dictionary<string, AnnotationValues>
-                            {
-                                { 
-                                    "ServiceTableColumn",
-                                    new AnnotationValues(oldValue: null, newValue: "Id")
-                                },
-                            }),
-                        Location = c.String(),
-                        GiraTypeId = c.String(),
-                        Date = c.DateTime(nullable: false),
-                        CreatedBy = c.String(),
-                        Enabled = c.Boolean(nullable: false),
-                        Version = c.Binary(nullable: false, fixedLength: true, timestamp: true, storeType: "rowversion",
-                            annotations: new Dictionary<string, AnnotationValues>
-                            {
-                                { 
-                                    "ServiceTableColumn",
-                                    new AnnotationValues(oldValue: null, newValue: "Version")
-                                },
-                            }),
-                        CreatedAt = c.DateTimeOffset(nullable: false, precision: 7,
-                            annotations: new Dictionary<string, AnnotationValues>
-                            {
-                                { 
-                                    "ServiceTableColumn",
-                                    new AnnotationValues(oldValue: null, newValue: "CreatedAt")
-                                },
-                            }),
-                        UpdatedAt = c.DateTimeOffset(precision: 7,
-                            annotations: new Dictionary<string, AnnotationValues>
-                            {
-                                { 
-                                    "ServiceTableColumn",
-                                    new AnnotationValues(oldValue: null, newValue: "UpdatedAt")
-                                },
-                            }),
-                        Deleted = c.Boolean(nullable: false,
-                            annotations: new Dictionary<string, AnnotationValues>
-                            {
-                                { 
-                                    "ServiceTableColumn",
-                                    new AnnotationValues(oldValue: null, newValue: "Deleted")
-                                },
-                            }),
-                    })
-                .PrimaryKey(t => t.Id)
-                .Index(t => t.CreatedAt, clustered: true);
-            
-            CreateTable(
                 "GiraMobileService.GiraRequestAcknowledges",
                 c => new
                     {
@@ -74,8 +21,6 @@ namespace GiraMobileService.Migrations
                                     new AnnotationValues(oldValue: null, newValue: "Id")
                                 },
                             }),
-                        GiraRequestId = c.Int(nullable: false),
-                        GiraUserId = c.Int(nullable: false),
                         Message = c.String(),
                         ShowContactInfo = c.Boolean(nullable: false),
                         CreatedBy = c.String(),
@@ -113,10 +58,13 @@ namespace GiraMobileService.Migrations
                             }),
                     })
                 .PrimaryKey(t => t.Id)
+                .ForeignKey("GiraMobileService.GiraRequests", t => t.Id)
+                .ForeignKey("GiraMobileService.GiraUsers", t => t.Id)
+                .Index(t => t.Id)
                 .Index(t => t.CreatedAt, clustered: true);
             
             CreateTable(
-                "GiraMobileService.GiraSubscriptions",
+                "GiraMobileService.GiraRequests",
                 c => new
                     {
                         Id = c.String(nullable: false, maxLength: 128,
@@ -127,12 +75,10 @@ namespace GiraMobileService.Migrations
                                     new AnnotationValues(oldValue: null, newValue: "Id")
                                 },
                             }),
-                        GiraSubscriptionId = c.Int(nullable: false),
                         Location = c.String(),
-                        Type = c.Int(nullable: false),
-                        DayOfWeek = c.Int(nullable: false),
-                        Time = c.DateTime(nullable: false),
+                        Date = c.DateTime(nullable: false),
                         CreatedBy = c.String(),
+                        Enabled = c.Boolean(nullable: false),
                         Version = c.Binary(nullable: false, fixedLength: true, timestamp: true, storeType: "rowversion",
                             annotations: new Dictionary<string, AnnotationValues>
                             {
@@ -167,6 +113,8 @@ namespace GiraMobileService.Migrations
                             }),
                     })
                 .PrimaryKey(t => t.Id)
+                .ForeignKey("GiraMobileService.GiraTypes", t => t.Id)
+                .Index(t => t.Id)
                 .Index(t => t.CreatedAt, clustered: true);
             
             CreateTable(
@@ -271,15 +219,116 @@ namespace GiraMobileService.Migrations
                 .PrimaryKey(t => t.Id)
                 .Index(t => t.CreatedAt, clustered: true);
             
+            CreateTable(
+                "GiraMobileService.GiraSubscriptions",
+                c => new
+                    {
+                        Id = c.String(nullable: false, maxLength: 128,
+                            annotations: new Dictionary<string, AnnotationValues>
+                            {
+                                { 
+                                    "ServiceTableColumn",
+                                    new AnnotationValues(oldValue: null, newValue: "Id")
+                                },
+                            }),
+                        GiraSubscriptionId = c.Int(nullable: false),
+                        Location = c.String(),
+                        DayOfWeek = c.Int(nullable: false),
+                        Time = c.DateTime(nullable: false),
+                        CreatedBy = c.String(),
+                        Version = c.Binary(nullable: false, fixedLength: true, timestamp: true, storeType: "rowversion",
+                            annotations: new Dictionary<string, AnnotationValues>
+                            {
+                                { 
+                                    "ServiceTableColumn",
+                                    new AnnotationValues(oldValue: null, newValue: "Version")
+                                },
+                            }),
+                        CreatedAt = c.DateTimeOffset(nullable: false, precision: 7,
+                            annotations: new Dictionary<string, AnnotationValues>
+                            {
+                                { 
+                                    "ServiceTableColumn",
+                                    new AnnotationValues(oldValue: null, newValue: "CreatedAt")
+                                },
+                            }),
+                        UpdatedAt = c.DateTimeOffset(precision: 7,
+                            annotations: new Dictionary<string, AnnotationValues>
+                            {
+                                { 
+                                    "ServiceTableColumn",
+                                    new AnnotationValues(oldValue: null, newValue: "UpdatedAt")
+                                },
+                            }),
+                        Deleted = c.Boolean(nullable: false,
+                            annotations: new Dictionary<string, AnnotationValues>
+                            {
+                                { 
+                                    "ServiceTableColumn",
+                                    new AnnotationValues(oldValue: null, newValue: "Deleted")
+                                },
+                            }),
+                    })
+                .PrimaryKey(t => t.Id)
+                .ForeignKey("GiraMobileService.GiraTypes", t => t.Id)
+                .Index(t => t.Id)
+                .Index(t => t.CreatedAt, clustered: true);
+            
         }
         
         public override void Down()
         {
+            DropForeignKey("GiraMobileService.GiraSubscriptions", "Id", "GiraMobileService.GiraTypes");
+            DropForeignKey("GiraMobileService.GiraRequestAcknowledges", "Id", "GiraMobileService.GiraUsers");
+            DropForeignKey("GiraMobileService.GiraRequestAcknowledges", "Id", "GiraMobileService.GiraRequests");
+            DropForeignKey("GiraMobileService.GiraRequests", "Id", "GiraMobileService.GiraTypes");
+            DropIndex("GiraMobileService.GiraSubscriptions", new[] { "CreatedAt" });
+            DropIndex("GiraMobileService.GiraSubscriptions", new[] { "Id" });
             DropIndex("GiraMobileService.GiraUsers", new[] { "CreatedAt" });
             DropIndex("GiraMobileService.GiraTypes", new[] { "CreatedAt" });
-            DropIndex("GiraMobileService.GiraSubscriptions", new[] { "CreatedAt" });
-            DropIndex("GiraMobileService.GiraRequestAcknowledges", new[] { "CreatedAt" });
             DropIndex("GiraMobileService.GiraRequests", new[] { "CreatedAt" });
+            DropIndex("GiraMobileService.GiraRequests", new[] { "Id" });
+            DropIndex("GiraMobileService.GiraRequestAcknowledges", new[] { "CreatedAt" });
+            DropIndex("GiraMobileService.GiraRequestAcknowledges", new[] { "Id" });
+            DropTable("GiraMobileService.GiraSubscriptions",
+                removedColumnAnnotations: new Dictionary<string, IDictionary<string, object>>
+                {
+                    {
+                        "CreatedAt",
+                        new Dictionary<string, object>
+                        {
+                            { "ServiceTableColumn", "CreatedAt" },
+                        }
+                    },
+                    {
+                        "Deleted",
+                        new Dictionary<string, object>
+                        {
+                            { "ServiceTableColumn", "Deleted" },
+                        }
+                    },
+                    {
+                        "Id",
+                        new Dictionary<string, object>
+                        {
+                            { "ServiceTableColumn", "Id" },
+                        }
+                    },
+                    {
+                        "UpdatedAt",
+                        new Dictionary<string, object>
+                        {
+                            { "ServiceTableColumn", "UpdatedAt" },
+                        }
+                    },
+                    {
+                        "Version",
+                        new Dictionary<string, object>
+                        {
+                            { "ServiceTableColumn", "Version" },
+                        }
+                    },
+                });
             DropTable("GiraMobileService.GiraUsers",
                 removedColumnAnnotations: new Dictionary<string, IDictionary<string, object>>
                 {
@@ -358,7 +407,7 @@ namespace GiraMobileService.Migrations
                         }
                     },
                 });
-            DropTable("GiraMobileService.GiraSubscriptions",
+            DropTable("GiraMobileService.GiraRequests",
                 removedColumnAnnotations: new Dictionary<string, IDictionary<string, object>>
                 {
                     {
@@ -398,45 +447,6 @@ namespace GiraMobileService.Migrations
                     },
                 });
             DropTable("GiraMobileService.GiraRequestAcknowledges",
-                removedColumnAnnotations: new Dictionary<string, IDictionary<string, object>>
-                {
-                    {
-                        "CreatedAt",
-                        new Dictionary<string, object>
-                        {
-                            { "ServiceTableColumn", "CreatedAt" },
-                        }
-                    },
-                    {
-                        "Deleted",
-                        new Dictionary<string, object>
-                        {
-                            { "ServiceTableColumn", "Deleted" },
-                        }
-                    },
-                    {
-                        "Id",
-                        new Dictionary<string, object>
-                        {
-                            { "ServiceTableColumn", "Id" },
-                        }
-                    },
-                    {
-                        "UpdatedAt",
-                        new Dictionary<string, object>
-                        {
-                            { "ServiceTableColumn", "UpdatedAt" },
-                        }
-                    },
-                    {
-                        "Version",
-                        new Dictionary<string, object>
-                        {
-                            { "ServiceTableColumn", "Version" },
-                        }
-                    },
-                });
-            DropTable("GiraMobileService.GiraRequests",
                 removedColumnAnnotations: new Dictionary<string, IDictionary<string, object>>
                 {
                     {

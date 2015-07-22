@@ -28,9 +28,6 @@ namespace GiraMobileService.Models
         {
         }
 
-        public virtual DbSet<GiraRequest> GiraRequest { get; set; }
-        public virtual DbSet<GiraRequestAcknowledge> GiraRequestAcknowledge { get; set; }
-        public virtual DbSet<GiraSubscription> GiraSubscription { get; set; }
         public virtual DbSet<GiraType> GiraType { get; set; }
         public virtual DbSet<GiraUser> GiraUser { get; set; }
 
@@ -47,11 +44,11 @@ namespace GiraMobileService.Models
                     "ServiceTableColumn", (property, attributes) => attributes.Single().ColumnType.ToString()));
         }
 
-        public System.Data.Entity.DbSet<GiraMobileService.DataObjects.GiraSubscription> GiraSubscriptions { get; set; }
+        public DbSet<GiraSubscription> GiraSubscriptions { get; set; }
 
-        public System.Data.Entity.DbSet<GiraMobileService.DataObjects.GiraRequest> GiraRequests { get; set; }
+        public DbSet<GiraRequest> GiraRequests { get; set; }
 
-        public System.Data.Entity.DbSet<GiraMobileService.DataObjects.GiraRequestAcknowledge> GiraRequestAcknowledges { get; set; }
+        public DbSet<GiraRequestAcknowledge> GiraRequestAcknowledges { get; set; }
     }
 
 }

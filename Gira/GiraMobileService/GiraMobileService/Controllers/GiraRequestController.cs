@@ -1,23 +1,29 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.OData;
-using Microsoft.WindowsAzure.Mobile.Service;
 using GiraMobileService.DataObjects;
 using GiraMobileService.Models;
+using Microsoft.WindowsAzure.Mobile.Service;
 using Microsoft.WindowsAzure.Mobile.Service.Security;
+using Newtonsoft.Json.Linq;
 
 namespace GiraMobileService.Controllers
 {
+    [AuthorizeLevel(AuthorizationLevel.User)]
     public class GiraRequestController : TableController<GiraRequest>
     {
+        MobileServiceContext _context;
+
         protected override void Initialize(HttpControllerContext controllerContext)
         {
             base.Initialize(controllerContext);
-            MobileServiceContext context = new MobileServiceContext();
-            DomainManager = new EntityDomainManager<GiraRequest>(context, Request, Services);
+            _context = new MobileServiceContext();
+            DomainManager = new EntityDomainManager<GiraRequest>(_context, Request, Services);
         }
 
         // GET tables/GiraRequest
@@ -32,9 +38,25 @@ namespace GiraMobileService.Controllers
             return Lookup(id);
         }
 
+        //public async Task<GiraRequest> GetGiraRequestById(string id)
+        //{
+        //    ServiceUser user = User as ServiceUser;
+        //    if (user != null)
+        //    {
+        //        GiraUser localUser = _context.GiraUser.FirstOrDefault(x => x.UserId == user.Id);
+        //        if (localUser == null)
+        //        {
+        //            await NewLocalUser(user);
+        //        }
+        //    }
+
+        //    List<GiraRequest> list = await _context.GiraRequests.Where(x => x.Id == id).ToListAsync();
+        //    return list.FirstOrDefault();
+        //}
+
         // PATCH tables/GiraRequest/48D68C86-6EA6-4C25-AA33-223FC9A27959
         [AuthorizeLevel(AuthorizationLevel.User)]
-        public Task<GiraRequest> PatchGiraRequest(string id, Delta<GiraRequest> patch)
+        public async Task<GiraRequest> PatchGiraRequest(string id, Delta<GiraRequest> patch)
         {
             ServiceUser user = User as ServiceUser;
             if (user == null)
@@ -42,8 +64,40 @@ namespace GiraMobileService.Controllers
                 throw new InvalidOperationException("This can only be called by authenticated clients");
             }
 
+            GiraUser localUser = _context.GiraUser.FirstOrDefault(x => x.UserId == user.Id);
+            if (localUser == null)
+            {
+                await NewLocalUser(user);
+            }
 
-            return UpdateAsync(id, patch);
+            return await UpdateAsync(id, patch);
+        }
+
+        private async Task NewLocalUser(ServiceUser user)
+        {
+            Collection<ProviderCredentials> identities = await user.GetIdentitiesAsync();
+            JObject result = new JObject();
+            FacebookCredentials fb = identities.OfType<FacebookCredentials>().FirstOrDefault();
+            if (fb != null)
+            {
+                var accessToken = fb.AccessToken;
+                result.Add("facebook", await GetProviderInfo("https://graph.facebook.com/me?access_token=" + accessToken));
+            }
+
+            GiraUser newLocalUser = new GiraUser
+            {
+                Email = result["email"].Value<String>()
+            };
+            _context.GiraUser.Add(newLocalUser);
+            await _context.SaveChangesAsync();
+        }
+
+        private async Task<JToken> GetProviderInfo(string url)
+        {
+            var c = new HttpClient();
+            var resp = await c.GetAsync(url);
+            resp.EnsureSuccessStatusCode();
+            return JToken.Parse(await resp.Content.ReadAsStringAsync());
         }
 
         // POST tables/GiraRequest
@@ -55,6 +109,7 @@ namespace GiraMobileService.Controllers
         }
 
         // DELETE tables/GiraRequest/48D68C86-6EA6-4C25-AA33-223FC9A27959
+        [AuthorizeLevel(AuthorizationLevel.User)]
         public Task DeleteGiraRequest(string id)
         {
              return DeleteAsync(id);

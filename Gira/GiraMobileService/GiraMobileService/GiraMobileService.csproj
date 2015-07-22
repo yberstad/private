@@ -195,9 +195,9 @@
     <Compile Include="DataObjects\GiraSubscription.cs" />
     <Compile Include="DataObjects\GiraType.cs" />
     <Compile Include="DataObjects\GiraUser.cs" />
-    <Compile Include="Migrations\201507081111519_Initial.cs" />
-    <Compile Include="Migrations\201507081111519_Initial.Designer.cs">
-      <DependentUpon>201507081111519_Initial.cs</DependentUpon>
+    <Compile Include="Migrations\201507152020283_Initial.cs" />
+    <Compile Include="Migrations\201507152020283_Initial.Designer.cs">
+      <DependentUpon>201507152020283_Initial.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\MobileServiceContext.cs" />
@@ -227,13 +227,13 @@
     <Content Include="Performance\Microsoft.ServiceBus.MessagingPerformanceCounters.man" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201507081111519_Initial.resx">
-      <DependentUpon>201507081111519_Initial.cs</DependentUpon>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Properties\PublishProfiles\mobile-GiraMobileService %282%29.pubxml" />
     <None Include="Properties\PublishProfiles\mobile-GiraMobileService.pubxml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201507152020283_Initial.resx">
+      <DependentUpon>201507152020283_Initial.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
