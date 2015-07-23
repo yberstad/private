@@ -34,8 +34,9 @@
                     <local:QuickStartTask Number="1" Title="Insert a TodoItem" Description="Enter some text below and click Save to insert a new todo item into your database" />
 
                     <StackPanel Orientation="Horizontal" Margin="72,0,0,0">
-                        <TextBox Name="TextInput" Margin="5" MinWidth="300"></TextBox>
-                        <Button Name="ButtonSave" Click="ButtonSave_Click" IsEnabled="False">Save</Button>
+                        <TextBox Name="TextInput" Margin="5" MinWidth="300"></TextBox> 
+                      <Button Name="ButtonLogin" Click="ButtonLogin_Click" Visibility="Visible">Sign in</Button>
+                      <Button Name="ButtonSave" Click="ButtonSave_Click" IsEnabled="False">Save</Button>
                     </StackPanel>
 
                 </StackPanel>

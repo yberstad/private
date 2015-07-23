@@ -21,9 +21,49 @@ namespace GiraMobileService
         private IMobileServiceTable<GiraRequest> giraRequestTable = App.MobileService.GetTable<GiraRequest>();
         //private IMobileServiceSyncTable<TodoItem> todoTable = App.MobileService.GetSyncTable<TodoItem>(); // offline sync
 
+        // Define a member variable for storing the signed-in user. 
+        private MobileServiceUser _user;
+
+        // Define a method that performs the authentication process
+        // using a Facebook sign-in. 
+        private async Task AuthenticateAsync()
+        {
+            while (_user == null)
+            {
+                string message;
+                try
+                {
+                    // Change 'MobileService' to the name of your MobileServiceClient instance.
+                    // Sign-in using Facebook authentication.
+                    _user = await App.MobileService
+                        .LoginAsync(MobileServiceAuthenticationProvider.Facebook, false);
+                    message =
+                        string.Format("You are now signed in - {0}", _user.UserId);
+                }
+                catch (InvalidOperationException)
+                {
+                    message = "You must log in. Login Required";
+                }
+
+                var dialog = new MessageDialog(message);
+                dialog.Commands.Add(new UICommand("OK"));
+                await dialog.ShowAsync();
+            }
+        }
+
         public MainPage()
         {
             InitializeComponent();
+        }
+
+        private async void ButtonLogin_Click(object sender, RoutedEventArgs e)
+        {
+            // Login the user and then load data from the mobile service.
+            await AuthenticateAsync();
+
+            // Hide the login button and load items from the mobile service.
+            ButtonLogin.Visibility = Visibility.Collapsed;
+            await RefreshTodoItems();
         }
 
         private async Task InsertTodoItem(GiraRequest giraRequest)
@@ -100,7 +140,7 @@ namespace GiraMobileService
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             //await InitLocalStoreAsync(); // offline sync
-            await RefreshTodoItems();
+            //await RefreshTodoItems();
         }
 
         #region Offline sync
