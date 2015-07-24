@@ -73,7 +73,7 @@ namespace GiraMobileService.Controllers
             return await UpdateAsync(id, patch);
         }
 
-        private async Task NewLocalUser(ServiceUser user)
+        private async Task<GiraUser> NewLocalUser(ServiceUser user)
         {
             Collection<ProviderCredentials> identities = await user.GetIdentitiesAsync();
             JObject result = new JObject();
@@ -81,15 +81,16 @@ namespace GiraMobileService.Controllers
             if (fb != null)
             {
                 var accessToken = fb.AccessToken;
-                result.Add("facebook", await GetProviderInfo("https://graph.facebook.com/me?access_token=" + accessToken));
+                result.Add("facebook", await GetProviderInfo("https://graph.facebook.com/me?fields=id,name,email&access_token=" + accessToken));
             }
 
             GiraUser newLocalUser = new GiraUser
             {
-                Email = result["email"].Value<String>()
+                Email = (result["email"] != null) ? result["email"].Value<String>() : string.Empty,
+                UserId = user.Id
             };
-            _context.GiraUser.Add(newLocalUser);
-            await _context.SaveChangesAsync();
+            var giraUserDomainManager = new EntityDomainManager<GiraUser>(_context, Request, Services);
+            return await giraUserDomainManager.InsertAsync(newLocalUser);
         }
 
         private async Task<JToken> GetProviderInfo(string url)
@@ -104,7 +105,29 @@ namespace GiraMobileService.Controllers
         [AuthorizeLevel(AuthorizationLevel.User)]
         public async Task<IHttpActionResult> PostGiraRequest(GiraRequest item)
         {
-            GiraRequest current = await InsertAsync(item);
+            ServiceUser user = User as ServiceUser;
+            if (user == null)
+            {
+                throw new InvalidOperationException("This can only be called by authenticated clients");
+            }
+
+            GiraUser localUser = _context.GiraUser.FirstOrDefault(x => x.UserId == user.Id);
+            if (localUser == null)
+            {
+                await NewLocalUser(user);
+            }
+            
+            GiraRequest newGiraRequest = new GiraRequest
+            {
+                CreatedBy = localUser != null ? localUser.Id : user.Id,
+                Date = item.Date,
+                Description = item.Description,
+                Enabled = true,
+                Location = item.Location,
+                GiraTypeRefId = item.GiraTypeRefId,
+            };
+
+            GiraRequest current = await InsertAsync(newGiraRequest);
             return CreatedAtRoute("Tables", new { id = current.Id }, current);
         }
 

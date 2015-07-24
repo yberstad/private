@@ -190,6 +190,7 @@
     <Compile Include="Controllers\GiraRequestAcknowledgeController.cs" />
     <Compile Include="Controllers\GiraRequestController.cs" />
     <Compile Include="Controllers\GiraSubscriptionController.cs" />
+    <Compile Include="Controllers\GiraTypeController.cs" />
     <Compile Include="DataObjects\GiraRequest.cs" />
     <Compile Include="DataObjects\GiraRequestAcknowledge.cs" />
     <Compile Include="DataObjects\GiraSubscription.cs" />
@@ -198,6 +199,14 @@
     <Compile Include="Migrations\201507152020283_Initial.cs" />
     <Compile Include="Migrations\201507152020283_Initial.Designer.cs">
       <DependentUpon>201507152020283_Initial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201507241828020_SecondMigration.cs" />
+    <Compile Include="Migrations\201507241828020_SecondMigration.Designer.cs">
+      <DependentUpon>201507241828020_SecondMigration.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201507241945302_ThirdMigration.cs" />
+    <Compile Include="Migrations\201507241945302_ThirdMigration.Designer.cs">
+      <DependentUpon>201507241945302_ThirdMigration.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\MobileServiceContext.cs" />
@@ -233,6 +242,12 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201507152020283_Initial.resx">
       <DependentUpon>201507152020283_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507241828020_SecondMigration.resx">
+      <DependentUpon>201507241828020_SecondMigration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507241945302_ThirdMigration.resx">
+      <DependentUpon>201507241945302_ThirdMigration.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
