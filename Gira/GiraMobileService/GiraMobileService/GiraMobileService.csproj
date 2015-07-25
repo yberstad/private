@@ -191,6 +191,7 @@
     <Compile Include="Controllers\GiraRequestController.cs" />
     <Compile Include="Controllers\GiraSubscriptionController.cs" />
     <Compile Include="Controllers\GiraTypeController.cs" />
+    <Compile Include="Controllers\GiraUserController.cs" />
     <Compile Include="DataObjects\GiraRequest.cs" />
     <Compile Include="DataObjects\GiraRequestAcknowledge.cs" />
     <Compile Include="DataObjects\GiraSubscription.cs" />
@@ -207,6 +208,14 @@
     <Compile Include="Migrations\201507241945302_ThirdMigration.cs" />
     <Compile Include="Migrations\201507241945302_ThirdMigration.Designer.cs">
       <DependentUpon>201507241945302_ThirdMigration.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201507251316418_FourthMigration.cs" />
+    <Compile Include="Migrations\201507251316418_FourthMigration.Designer.cs">
+      <DependentUpon>201507251316418_FourthMigration.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201507251834359_FifthhMigration.cs" />
+    <Compile Include="Migrations\201507251834359_FifthhMigration.Designer.cs">
+      <DependentUpon>201507251834359_FifthhMigration.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\MobileServiceContext.cs" />
@@ -248,6 +257,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201507241945302_ThirdMigration.resx">
       <DependentUpon>201507241945302_ThirdMigration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507251316418_FourthMigration.resx">
+      <DependentUpon>201507251316418_FourthMigration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507251834359_FifthhMigration.resx">
+      <DependentUpon>201507251834359_FifthhMigration.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Data.SqlTypes;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -64,7 +65,7 @@ namespace GiraMobileService.Controllers
                 throw new InvalidOperationException("This can only be called by authenticated clients");
             }
 
-            GiraUser localUser = _context.GiraUser.FirstOrDefault(x => x.UserId == user.Id);
+            GiraUser localUser = _context.GiraUsers.FirstOrDefault(x => x.UserId == user.Id);
             if (localUser == null)
             {
                 await NewLocalUser(user);
@@ -86,9 +87,14 @@ namespace GiraMobileService.Controllers
 
             GiraUser newLocalUser = new GiraUser
             {
-                Email = (result["email"] != null) ? result["email"].Value<String>() : string.Empty,
                 UserId = user.Id
             };
+            if (result["facebook"] != null)
+            {
+                newLocalUser.Email = (result["facebook"]["email"] != null) ? result["facebook"]["email"].Value<String>() : string.Empty;
+                newLocalUser.UserName = (result["facebook"]["name"] != null) ? result["facebook"]["name"].Value<String>() : string.Empty;
+            }
+
             var giraUserDomainManager = new EntityDomainManager<GiraUser>(_context, Request, Services);
             return await giraUserDomainManager.InsertAsync(newLocalUser);
         }
@@ -111,12 +117,12 @@ namespace GiraMobileService.Controllers
                 throw new InvalidOperationException("This can only be called by authenticated clients");
             }
 
-            GiraUser localUser = _context.GiraUser.FirstOrDefault(x => x.UserId == user.Id);
+            GiraUser localUser = _context.GiraUsers.FirstOrDefault(x => x.UserId == user.Id);
             if (localUser == null)
             {
                 await NewLocalUser(user);
             }
-            
+;
             GiraRequest newGiraRequest = new GiraRequest
             {
                 CreatedBy = localUser != null ? localUser.Id : user.Id,
@@ -125,6 +131,9 @@ namespace GiraMobileService.Controllers
                 Enabled = true,
                 Location = item.Location,
                 GiraTypeRefId = item.GiraTypeRefId,
+                AllDay = item.AllDay,
+                StartTime = (item.StartTime == DateTime.MinValue) ? SqlDateTime.MinValue.Value : item.StartTime,
+                StopTime = (item.StopTime == DateTime.MinValue) ? SqlDateTime.MinValue.Value : item.StopTime
             };
 
             GiraRequest current = await InsertAsync(newGiraRequest);

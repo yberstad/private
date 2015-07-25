@@ -9,10 +9,12 @@ namespace GiraMobileService.DataObjects
 		public bool ShowContactInfo { get; set; }
         public string CreatedBy { get; set; }
 
-        [ForeignKey("Id")]
-        public virtual GiraRequest Request { get; set; }
+        public string GiraRequestRefId { get; set; }
+        [ForeignKey("GiraRequestRefId")]
+        public GiraRequest Request { get; set; }
 
-        [ForeignKey("Id")]
-        public virtual GiraUser User { get; set; }
+        public string GiraUserRefId { get; set; }
+        [ForeignKey("GiraUserRefId")]
+        public GiraUser User { get; set; }
     }
 }

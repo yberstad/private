@@ -6,13 +6,17 @@ namespace GiraMobileService.DataObjects
 {
     public class GiraSubscription : EntityData
     {
-        public int GiraSubscriptionId { get; set; }
         public string Location { get; set; }
         public int DayOfWeek { get; set; }
-        public DateTime Time { get; set; }
+        public DateTime StartTime { get; set; }
+        public DateTime StopTime { get; set; }
+        public bool AllDay { get; set; }
+        public string Description { get; set; }
         public string CreatedBy { get; set; }
+        public bool Enabled { get; set; }
 
-        [ForeignKey("Id")]
-        public virtual GiraType Type { get; set; }
+        public string GiraTypeRefId { get; set; }
+        [ForeignKey("GiraTypeRefId")]
+        public GiraType Type { get; set; }
     }
 }

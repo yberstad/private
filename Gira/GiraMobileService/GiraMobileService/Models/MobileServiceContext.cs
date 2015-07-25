@@ -28,8 +28,6 @@ namespace GiraMobileService.Models
         {
         }
 
-        public virtual DbSet<GiraUser> GiraUser { get; set; }
-
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             string schema = ServiceSettingsDictionary.GetSchemaName();
@@ -50,6 +48,8 @@ namespace GiraMobileService.Models
         public DbSet<GiraRequestAcknowledge> GiraRequestAcknowledges { get; set; }
 
         public DbSet<GiraType> GiraTypes { get; set; }
+
+        public DbSet<GiraUser> GiraUsers { get; set; }
     }
 
 }
