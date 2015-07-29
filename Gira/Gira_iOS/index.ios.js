@@ -10,23 +10,67 @@ var {
   StyleSheet,
   Text,
   View,
+  TouchableHighlight,
 } = React;
 
+var AzureManager = require('NativeModules').AzureMSClient;
+
 var Gira_iOS = React.createClass({
+  getInitialState() {
+    return {
+      result: '...',
+      userid: 'user_id',
+      azureToken : 'azureToken',
+      data: '',
+    }
+  },
+
+  login(){
+    AzureManager.loginWithProvider("facebook",  (error, info) => {
+      if (error) {
+        this.setState({result: error});
+      } else {
+        this.setState({result: info});
+        this.setState({userid: info.userId, azureToken: info.token})
+      }
+    });
+  },
+
+  readData()
+  {
+    AzureManager.readWithCompletion("GiraRequest", this.state.userid, this.state.azureToken,
+        (error, dataReturned) => {
+          if(error)
+          {
+            alert('Error: ' + error);
+          }
+          else
+          {
+            this.setState({data: dataReturned});
+          }
+      });
+  },
+
   render: function() {
     return (
       <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Welcome to React Native!
-        </Text>
+        <TouchableHighlight onPress={this.login}>
+          <Text style={styles.welcome}>
+            Facebook Login
+          </Text>
+        </TouchableHighlight>
+        <TouchableHighlight onPress={this.readData}>
+          <Text style={styles.welcome}>
+            Read data
+          </Text>
+        </TouchableHighlight>
         <Text style={styles.instructions}>
-          To get started, edit index.ios.js
-        </Text>
-        <Text style={styles.instructions}>
-          Press Cmd+R to reload,{'\n'}
-          Cmd+D or shake for dev menu
+          {this.state.result}
+          {this.state.azureToken}
+          {this.state.data}
         </Text>
       </View>
+
     );
   }
 });
