@@ -8,3 +8,27 @@ X-ZUMO-AUTH eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJ1cm46bWljcm9zb2Z0Ond
   "date": "2015-07-24T19:55:13.66Z",
   "giraTypeRefId": "ea9a0b93ce8b4ba0a58a0076929eb71b"
 }
+
+"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJ1cm46bWljcm9zb2Z0OndpbmRvd3MtYXp1cmU6enVtbyIsImF1ZCI6InVybjptaWNyb3NvZnQ6d2luZG93cy1henVyZTp6dW1vIiwibmJmIjoxNDM4MzI4NzY5LCJleHAiOjE0NDA5MjA3NjksInVybjptaWNyb3NvZnQ6Y3JlZGVudGlhbHMiOiJ7XCJhY2Nlc3NUb2tlblwiOlwiQ0FBR1RXVmZockl3QkFManAyQXpMTlpCaEhQWkJvUHQxaW9tdVBaQ0hDMjlGSVIxeWNhNUtGRDhPZDJaQlpDckJEM3JjaHZDYTFSb0oyWFZybFRpbWhqUTJjTVZRZTNFak5hbGI1T25hVmlSQzB6QmRWVjFYQnV4Mm12ZmZCbGJoRGRvTDR3ZnBKRTJsZTZKOHRQYlFESHl3bm9YU2g0WUdlZkluUHdHNWRsOTNJME5wcTVUc3g5Tkx1SVFBUmkxWXM2RDJnU25XSWZpWGEzamxmYUg4MlwifSIsInVpZCI6IkZhY2Vib29rOjg3NTAyODI1MjUzNDQ0MyIsInZlciI6IjIifQ.CcbXJtrU37BYgZZFB0GIEw_97yfouiwPq-fPayaqX7k"
+{
+  "location": "sample string 1",
+  "date": "2014-06-27T09:32:49+02:00",
+  "startTime": "2014-06-27T09:32:49+02:00",
+  "stopTime": "2014-06-27T09:32:49+02:00",
+  "allDay": true,
+  "createdBy": "sample string 6",
+  "enabled": true,
+  "description": "sample string 8",
+  "giraTypeRefId": "2fa7186245c74643872830b832271564",
+}
+
+
+
+
+[{"id":"517b835caff944869d2b6c64baf37654","giraTypeRefId":"2fa7186245c74643872830b832271564","description":"sample string 8","enabled":true,"createdBy":"cd1119b73ca74a38a4a1318c7b380780","allDay":true,"stopTime":"2015-07-30T21:22:08.893Z","startTime":"2015-07-30T21:22:08.893Z","date":"2015-07-30T21:22:08.893Z","location":"sample string 1"},{"id":"984b64361979425c8e13f0e254b53abd","giraTypeRefId":"2fa7186245c74643872830b832271564","description":"descritption1","enabled":true,"createdBy":"cd1119b73ca74a38a4a1318c7b380780","allDay":true,"stopTime":"2015-07-30T19:03:26.57Z","startTime":"2015-07-30T19:03:26.57Z","date":"2015-07-30T19:03:26.57Z","location":"Location"},{"id":"ae92421092ed422183c33e08351df49d","giraTypeRefId":"2fa7186245c74643872830b832271564","description":"sample string 8","enabled":true,"createdBy":"cd1119b73ca74a38a4a1318c7b380780","allDay":true,"stopTime":"2014-06-27T07:32:49Z","startTime":"2014-06-27T07:32:49Z","date":"2014-06-27T07:32:49Z","location":"sample string 1"},{"id":"d3659895d75e4e98873228edc929c81d","giraTypeRefId":"2fa7186245c74643872830b832271564","description":"descritption1","enabled":true,"createdBy":"cd1119b73ca74a38a4a1318c7b380780","allDay":false,"stopTime":"2015-07-30T19:03:26.57Z","startTime":"2015-07-30T19:03:26.57Z","date":"2015-07-30T19:03:26.57Z","location":"Location"}]
+
+
+
+
+
+"[{"id":"5672cc44ae6e49dfbed61d04326f7946","giraTypeRefId":"2fa7186245c74643872830b832271564","description":"sample string 8","enabled":true,"createdBy":"cd1119b73ca74a38a4a1318c7b380780","allDay":true,"stopTime":"2014-06-27T07:32:49Z","startTime":"2014-06-27T07:32:49Z","date":"2014-06-27T07:32:49Z","location":"Dateexample"}]"
