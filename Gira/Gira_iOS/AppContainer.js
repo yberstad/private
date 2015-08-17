@@ -11,16 +11,31 @@ var {
 	NavigatorIOS
 } = React;
 
-var GiraRequestList = require('./GiraRequestList');
-var GiraRequestAdd = require('./GiraRequestAdd');
+var GiraRequestList = require('./GiraRequestListView');
+var GiraRequestAdd = require('./GiraRequestAddView');
+
+var _giraRequestAddView;
 
 class AppContainer extends Component {
 	constructor(props){
 		super(props);
-
+		
+		this._giraRequestAddView = {};
 		this.state = {
 			selectedTab: 'requestlist'
 		}
+	}
+
+	onGiraRequestAddViewRef(giraRequestAddViewRef)
+	{
+		_giraRequestAddView = giraRequestAddViewRef;
+	}
+
+	navigateToTab(tabName){
+		this.refs.startingPoint.popToTop();
+		this.setState({
+			selectedTab: tabName
+		})
 	}
 
 	render()
@@ -34,13 +49,14 @@ class AppContainer extends Component {
 					onPress={() => this.setState({selectedTab: 'requestlist'})}
 				>
 					<NavigatorIOS
+						ref="startingPoint"
 						style={{flex: 1}}
 						initialRoute={{
 							component: GiraRequestList,
 							title: 'Gira !'
 						}}
 					/>
-				</TabBarIOS.Item>
+				</TabBarIOS.Item>				
 				<TabBarIOS.Item
 					title="Legg til Gira"
 					selected={this.state.selectedTab == 'addRequest'}
@@ -50,7 +66,14 @@ class AppContainer extends Component {
 							style={{flex:1}}
 							initialRoute={{
 								component: GiraRequestAdd,
-								title: 'Legg til Gira'
+								title: 'Legg til Gira',
+								leftButtonTitle: 'Avbryt',
+								onLeftButtonPress: () => {this.navigateToTab('requestlist');},
+								rightButtonTitle: 'Lagre',
+								passProps: {
+									ref: this.onGiraRequestAddViewRef,
+								},
+								onRightButtonPress: () => { _giraRequestAddView && _giraRequestAddView.insertItem(); }
 							}}
 						/>
 					</TabBarIOS.Item>

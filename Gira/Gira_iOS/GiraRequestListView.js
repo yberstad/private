@@ -5,13 +5,14 @@ var {
 	Text,
 	ListView,
 	ActivityIndicatorIOS,
-	TouchableHiglight,
+	TouchableHighlight,
 	StyleSheet
 } = React;
 
 var AzureApi = require('./AzureApi');
+var GiraRequestView = require('./GiraRequestView');
 
-class GiraRequestList extends React.Component{
+class GiraRequestListView extends React.Component{
 	constructor(props){
 		super(props);
 		var ds = new ListView.DataSource({
@@ -45,14 +46,25 @@ class GiraRequestList extends React.Component{
 
 	}
 
+	rowPressed(giraRequest) {
+		this.props.navigator.push({
+		title: "GiraRequest",
+		component: GiraRequestView,
+		passProps: {giraRequest: giraRequest}
+		});
+	}
+
 	renderRow(rowData)
 	{
 		return (
+			<TouchableHighlight onPress={() => this.rowPressed(rowData)}
+        underlayColor='#dddddd'>
 			<View>
 				<Text>
 					{rowData.description}
 				</Text>
 			</View>
+			</TouchableHighlight>
 		);	
 	}
 
@@ -96,4 +108,4 @@ var styles = StyleSheet.create({
     }
 });
 
-module.exports = GiraRequestList;
+module.exports = GiraRequestListView;
