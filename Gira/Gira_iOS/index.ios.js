@@ -15,6 +15,7 @@ var AzureApi = require('./AzureApi');
 
 var Gira_iOS = React.createClass({
 	componentDidMount: function(){
+		/*ßAzureApi.removeAuthInfo();*/
 		AzureApi.getAuthInfo((err, authInfo) => {
 			this.setState({
 				checkingAuth: false,

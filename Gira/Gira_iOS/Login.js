@@ -33,7 +33,7 @@ class Login extends Component{
 			<View style={styles.container}>
 				
 				<Text style={styles.heading}>GIRA!</Text>
-				<TouchableHighlight style={styles.button} onPress={this.onLoginPressed("facebook")}>
+				<TouchableHighlight style={styles.button} onPress={() => this.onLoginPressed("facebook")}>
 					<Text style={styles.buttonText}>Logg inn med Facebook</Text>
 				</TouchableHighlight>
 			</View>

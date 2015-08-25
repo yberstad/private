@@ -34,6 +34,10 @@ class AzureApi {
 		});
 	}
 
+	removeAuthInfo(){
+		AsyncStorage.removeItem(tokenKey);
+	}
+
 	login(provider, callback){
 	 	AzureManager.loginWithProvider(provider,  (err, info) => {
 	 		AsyncStorage.multiSet([
