@@ -61,22 +61,13 @@ class AzureApi {
 		});
 	}
 
-	insertGiraRequest(description, authInfo, callback)
+	insertGiraRequest(value, authInfo, callback)
 	{
 		var url = 'http://' + host + '/tables/GiraRequest';
 	  	fetch(url, {
 	    	method: 'post',
 	    	headers: authInfo.headers,
-	    	body: JSON.stringify({
-	    		'location': 'insertGiraRequestWithPost1',
-	    		'date': '2015-08-05T20:30:00.000Z',
-	    		'startTime': '2015-08-05T20:30:00.000Z',
-	    		'stopTime': '2015-08-05T20:30:00.000Z',
-	    		'allDay': 'true',
-	    		'createdBy': 'facebook:123456',
-	    		'enabled': 'true',
-	    		'description': description,
-	    		'giraTypeRefId': '2fa7186245c74643872830b832271564'})
+	    	body: JSON.stringify(value)
 		})
 		.then(response => response.json())
 		.then(json => callback(null, json))
