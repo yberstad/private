@@ -3,6 +3,7 @@
 var React = require('react-native');
 var t = require('tcomb-form-native');
 var collapsableDate = require('./CollapsableDate');
+var collapsablePicker = require('./CollapsablePicker');
 var AzureApi = require('./AzureApi');
 
 var {
@@ -17,14 +18,20 @@ var {
 var Form = t.form.Form;
 
 var multilineTextBox = JSON.parse(JSON.stringify(t.form.Form.stylesheet));
-multilineTextBox.textbox.normal.height = 100;
-multilineTextBox.textbox.error.height = 100;
+multilineTextBox.textbox.normal.height = 60;
+multilineTextBox.textbox.error.height = 60;
 
 var picker = JSON.parse(JSON.stringify(t.form.Form.stylesheet));
 picker.select.normal.marginBottom = 1;
 picker.select.error.marginBottom = 1;
 picker.datepicker.normal.marginBottom = 1;
 picker.datepicker.error.marginBottom = 1;
+
+var checkBoxStyle = JSON.parse(JSON.stringify(t.form.Form.stylesheet));
+checkBoxStyle.formGroup.normal.flexDirection = 'row';
+checkBoxStyle.controlLabel.normal.fontWeight = 'normal';
+checkBoxStyle.controlLabel.normal.flex = 4;
+checkBoxStyle.checkbox.normal.flex = 1;
 
 var GiraRequestType = t.enums({
 	'' : 'Velg aktivitet',
@@ -52,7 +59,9 @@ var options = {
 	fields:{
 		giraTypeRefId:{
 			nullOption: false,
-			error: 'Aktivitet manger'
+			error: 'Aktivitet manger',
+			collapsed: true,
+			factory: collapsablePicker
 		},
 		description: {
 			placeholder: 'Beskrivelse',
@@ -64,32 +73,44 @@ var options = {
 			error: 'Sted mangler'
 		},
 		date:{
+			label: 'Dato',
 			mode: 'date',
-			stylesheet: picker
+			stylesheet: picker,
+			collapsed: true,
+			factory: collapsableDate,
+			onToggle: null
 		},
 		allDay:{
 			label: 'Hele dagen',
-			value: true
+			value: true,
+			stylesheet: checkBoxStyle
 		},
 		startTime: {
-			label: 'Start tidspunkt',
+			label: 'Start',
 			mode: 'time',
-			minuteInterval:"30",
-			stylesheet: picker
+			minuteInterval: '30',
+			stylesheet: picker,
+			hide: true,
+			collapsed: false,
+			factory: collapsableDate,
+			onToggle: null
 		},
 		stopTime:{
-			label: 'Slutt tidpunkt',
+			label: 'Slutt',
 			mode: 'time',
-			minuteInterval:"30",
-			stylesheet: picker
+			minuteInterval:'30',
+			stylesheet: picker,
+			hide: true,
+			collapsed: false,
+			factory: collapsableDate,
+			onToggle: null
 		}
 	}
-}
+};
 
-class GiraRequestAddView extends Component {
-	constructor(props){
-		super(props);
-		this.state = {
+var GiraRequestAddView = React.createClass({
+	getInitialState: function() {
+		return {
 	      options: options,
 	      value: {
 	        giraTypeRefId: '',
@@ -101,9 +122,50 @@ class GiraRequestAddView extends Component {
 	        stopTime: new Date(),
 	      }
 	    };
-	}
+	},
 
-	insertItem()
+	componentWillMount: function(){
+		this.state.options.fields.date.onToggle = this.onToggle;
+		this.state.options.fields.giraTypeRefId.onToggle = this.onToggleGiraRef;
+	},
+
+	onToggleGiraRef: function(toggleValue){
+		var options = t.update(this.state.options, {
+	      fields: {
+	        giraTypeRefId: {
+	          collapsed: {'$set': !toggleValue}
+	        }
+	      }
+	    });
+	    this.setState({options: options});
+	},
+
+	onToggle: function(toggleValue){
+		var options = t.update(this.state.options, {
+	      fields: {
+	        date: {
+	          collapsed: {'$set': !toggleValue}
+	        }
+	      }
+	    });
+	    this.setState({options: options});
+	},
+
+	onChange: function(value){
+		var options = t.update(this.state.options, {
+	      fields: {
+	        startTime: {
+	          hide: {'$set': value.allDay}
+	        },
+	        stopTime: {
+	          hide: {'$set': value.allDay}
+	        }
+	      }
+	    });
+	    this.setState({options: options, value: value});
+	},
+
+	insertItem: function()
 	{
 		AzureApi.getAuthInfo((err, authInformation) => {
 			var value = this.refs.form.getValue();
@@ -131,10 +193,10 @@ class GiraRequestAddView extends Component {
 				});
 			}
 		});
-	}
+	},
 
 
-	render(){
+	render: function(){
 		return (
 			<ScrollView>
 				<View style={styles.container}>
@@ -143,6 +205,7 @@ class GiraRequestAddView extends Component {
 				    type={GiraRequestInput}
 				    options={this.state.options}
 				    value={this.state.value}
+				    onChange={this.onChange}
 				    />
 				</View>
 			</ScrollView>
@@ -150,12 +213,12 @@ class GiraRequestAddView extends Component {
 	}
 
 
-}
+});
 
 var styles = React.StyleSheet.create({
     container: {
 	    justifyContent: 'center',
-	    marginTop: -80,
+	    marginTop: 10,
 	    padding: 5,
 	    backgroundColor: '#ffffff'
     }

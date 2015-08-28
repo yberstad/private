@@ -1,10 +1,10 @@
 'use strict';
 
 var React = require('react-native');
-var { View, Text, TouchableHighlight, DatePickerIOS, StyleSheet } = React;
+var { View, Text, TouchableHighlight, PickerIOS, StyleSheet } = React;
 var t = require('tcomb-form-native');
 var Component = t.form.Component;
-class CollapsableDate extends Component {
+class CollapsablePicker extends Component {
 
   // this is the only required method to implement
   getTemplate() {
@@ -13,26 +13,21 @@ class CollapsableDate extends Component {
       var stylesheet = locals.stylesheet;
       var formGroupStyle = stylesheet.formGroup.normal;
       var controlLabelStyle = stylesheet.controlLabel.normal;
-      var datepickerStyle = stylesheet.datepicker.normal;
+      var selectStyle = stylesheet.select.normal;
       var helpBlockStyle = stylesheet.helpBlock.normal;
       var errorBlockStyle = stylesheet.errorBlock;
 
       if (locals.hasError) {
         formGroupStyle = stylesheet.formGroup.error;
         controlLabelStyle = stylesheet.controlLabel.error;
-        datepickerStyle = stylesheet.datepicker.error;
+        selectStyle = stylesheet.select.error;
         helpBlockStyle = stylesheet.helpBlock.error;
       }
-
-      var dateFormat = {year: "numeric", month: "long", day: "numeric"};
-      var timeFormat = {hour: "2-digit", minute: "2-digit"};
 
       var label = locals.label ? <Text style={controlLabelStyle}>{locals.label}</Text> : null;
       var help = locals.help ? <Text style={helpBlockStyle}>{locals.help}</Text> : null;
       var error = locals.hasError && locals.error ? <Text style={errorBlockStyle}>{locals.error}</Text> : null;
-      var dateOrTimeAsString = locals.mode == 'time' ? 
-        locals.value.toLocaleTimeString('nb-NO', timeFormat) : 
-        locals.value.toLocaleDateString('nb-NO', dateFormat);
+      var valueAsText = locals.enums.meta.map[locals.value];
 
       if(locals.hide)
       {
@@ -45,7 +40,7 @@ class CollapsableDate extends Component {
             <TouchableHighlight style={styles.button} onPress={() => locals.onToggle(locals.collapsed)} underlayColor="#ffffff">
               <View style={styles.buttonView}>
                   <Text style={styles.buttonLabel}>{locals.label}</Text> 
-                  <Text style={styles.buttonDate}>{dateOrTimeAsString}</Text> 
+                  <Text style={styles.buttonDate}>{valueAsText}</Text> 
               </View>
             </TouchableHighlight>
             {help}
@@ -54,31 +49,60 @@ class CollapsableDate extends Component {
         );
       }
       else {
+        var options = locals.options.map(({value, text}) => <PickerIOS.Item key={value} value={value} label={text} />);
         return (
         <View style={formGroupStyle}>
           <TouchableHighlight style={styles.button} onPress={() => locals.onToggle(locals.collapsed)} underlayColor="#ffffff">
             <View style={styles.buttonView}>
                 <Text style={styles.buttonLabel}>{locals.label}</Text> 
-                <Text style={styles.buttonDate}>{dateOrTimeAsString}</Text>
+                <Text style={styles.buttonDate}>{valueAsText}</Text>
             </View>
           </TouchableHighlight>
-          <DatePickerIOS
+          <PickerIOS
             ref="input"
-            maximumDate={locals.maximumDate}
-            minimumDate={locals.minimumDate}
-            minuteInterval={locals.minuteInterval}
-            mode={locals.mode}
-            timeZoneOffsetInMinutes={locals.timeZoneOffsetInMinutes}
-            style={datepickerStyle}
-            onDateChange={(value) => locals.onChange(value)}
-            date={locals.value}
-          />
+            style={selectStyle}
+            selectedValue={locals.value}
+            onValueChange={locals.onChange}
+          >
+            {options}
+          </PickerIOS>
           {help}
           {error}
           </View>
         );
       }
     }
+  }
+
+  getNullOption() {
+    return this.props.options.nullOption || {value: '', text: '-'};
+  }
+
+  getEnum() {
+    return this.typeInfo.innerType;
+  }
+
+  getOptionsOfEnum(type) {
+  var enums = type.meta.map;
+  return Object.keys(enums).map(value => {
+    return {
+      value,
+      text: enums[value]
+    };
+  });
+}
+
+  getOptions() {
+    var options = this.props.options;
+    var items = options.options ? options.options.slice() : this.getOptionsOfEnum(this.getEnum());
+    if (options.order) {
+      items.sort(getComparator(options.order));
+    }
+    var nullOption = this.getNullOption();
+    if (options.nullOption !== false) {
+      items.unshift(nullOption);
+    }
+    return items;
   }
 
   // you can optionally override the default getLocals method
@@ -93,10 +117,10 @@ class CollapsableDate extends Component {
     // - onChange
     // - stylesheet
     var locals = super.getLocals();
-    locals.mode = this.props.options.mode;
-    locals.minuteInterval = this.props.options.minuteInterval;
+    locals.options = this.getOptions();
     locals.hide = this.props.options.hide;
     locals.collapsed = this.props.options.collapsed;
+    locals.enums = this.getEnum();
     if(this.props.options.onToggle)
     {
       locals.onToggle = this.props.options.onToggle.bind(this);
@@ -137,4 +161,4 @@ var styles = StyleSheet.create({
   }
 });
 
-module.exports = CollapsableDate;
+module.exports = CollapsablePicker;

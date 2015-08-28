@@ -61,6 +61,20 @@ class AzureApi {
 		});
 	}
 
+	getGiraTypeList(authInfo, callback)
+	{
+		var url = 'http://' + host + '/tables/GiraType';
+	  	fetch(url, {
+	    	method: 'get',
+	    	headers: authInfo.headers
+		})
+		.then(response => response.json())
+		.then(json => callback(null, json))
+		.catch(error => {
+	    	callback(error, null);
+		});
+	}
+
 	insertGiraRequest(value, authInfo, callback)
 	{
 		var url = 'http://' + host + '/tables/GiraRequest';
