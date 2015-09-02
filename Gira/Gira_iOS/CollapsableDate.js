@@ -3,8 +3,8 @@
 var React = require('react-native');
 var { View, Text, TouchableHighlight, DatePickerIOS, StyleSheet } = React;
 var t = require('tcomb-form-native');
-var Component = t.form.Component;
-class CollapsableDate extends Component {
+var DatePicker = t.form.DatePicker;
+class CollapsableDate extends DatePicker {
 
   // this is the only required method to implement
   getTemplate() {
@@ -24,15 +24,15 @@ class CollapsableDate extends Component {
         helpBlockStyle = stylesheet.helpBlock.error;
       }
 
-      var dateFormat = {year: "numeric", month: "long", day: "numeric"};
-      var timeFormat = {hour: "2-digit", minute: "2-digit"};
+      var dateFormat = {year: 'numeric', month: 'long', day: 'numeric'};
+      var timeFormat = {hour: 'numeric', minute: 'numeric'};
 
       var label = locals.label ? <Text style={controlLabelStyle}>{locals.label}</Text> : null;
       var help = locals.help ? <Text style={helpBlockStyle}>{locals.help}</Text> : null;
       var error = locals.hasError && locals.error ? <Text style={errorBlockStyle}>{locals.error}</Text> : null;
       var dateOrTimeAsString = locals.mode == 'time' ? 
-        locals.value.toLocaleTimeString('nb-NO', timeFormat) : 
-        locals.value.toLocaleDateString('nb-NO', dateFormat);
+        locals.value.toLocaleTimeString(locals.culture, timeFormat) : 
+        locals.value.toLocaleDateString(locals.culture, dateFormat);
 
       if(locals.hide)
       {
@@ -42,7 +42,13 @@ class CollapsableDate extends Component {
       if(locals.collapsed){
         return (
           <View style={formGroupStyle}>
-            <TouchableHighlight style={styles.button} onPress={() => locals.onToggle(locals.collapsed)} underlayColor="#ffffff">
+            <TouchableHighlight style={styles.button} onPress={() => {
+                  if(locals.onToggle){
+                    locals.onToggle(locals.collapsed);
+                  }
+                }
+              } 
+              underlayColor="#ffffff">
               <View style={styles.buttonView}>
                   <Text style={styles.buttonLabel}>{locals.label}</Text> 
                   <Text style={styles.buttonDate}>{dateOrTimeAsString}</Text> 
@@ -56,7 +62,13 @@ class CollapsableDate extends Component {
       else {
         return (
         <View style={formGroupStyle}>
-          <TouchableHighlight style={styles.button} onPress={() => locals.onToggle(locals.collapsed)} underlayColor="#ffffff">
+          <TouchableHighlight style={styles.button} onPress={() => {
+                  if(locals.onToggle){
+                    locals.onToggle(locals.collapsed);
+                  }
+                }
+              } 
+              underlayColor="#ffffff">
             <View style={styles.buttonView}>
                 <Text style={styles.buttonLabel}>{locals.label}</Text> 
                 <Text style={styles.buttonDate}>{dateOrTimeAsString}</Text>
@@ -84,25 +96,14 @@ class CollapsableDate extends Component {
   // you can optionally override the default getLocals method
   // it will provide the locals param to your template
   getLocals() {
-
-    // in locals you'll find the default locals:
-    // - path
-    // - error
-    // - hasError
-    // - label
-    // - onChange
-    // - stylesheet
     var locals = super.getLocals();
-    locals.mode = this.props.options.mode;
-    locals.minuteInterval = this.props.options.minuteInterval;
     locals.hide = this.props.options.hide;
     locals.collapsed = this.props.options.collapsed;
+    locals.culture = this.props.options.culture; 
     if(this.props.options.onToggle)
     {
       locals.onToggle = this.props.options.onToggle.bind(this);
     }
-
-    // add here your custom locals
 
     return locals;
   }

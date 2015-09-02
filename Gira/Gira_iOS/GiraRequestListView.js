@@ -58,12 +58,35 @@ class GiraRequestListView extends React.Component{
 	{
 		return (
 			<TouchableHighlight onPress={() => this.rowPressed(rowData)}
-        underlayColor='#dddddd'>
-			<View>
-				<Text>
-					{rowData.description}
-				</Text>
-			</View>
+        		underlayColor='#dddddd'>
+	            <View style={{
+	                padding: 20,
+	                borderColor: '#D7D7D7',
+	                borderBottomWidth: 1,
+	                backgroundColor: '#fff'
+	            }}>
+	                <Text style={{
+	                    fontSize: 20,
+	                    fontWeight: '600'
+	                }}>
+	                    {rowData.giraTypeRefId}
+	                </Text>
+
+	                <View style={{
+	                    flex: 1,
+	                    flexDirection: 'row',
+	                    justifyContent: 'space-between',
+	                    marginTop: 20,
+	                    marginBottom: 20
+	                }}>
+
+	                    <View style={styles.repoCell}>
+	                        <Text style={styles.repoCellLabel}>
+	                            {rowData.description}
+	                        </Text>
+	                    </View>
+	                </View>
+	            </View>
 			</TouchableHighlight>
 		);	
 	}
@@ -71,21 +94,16 @@ class GiraRequestListView extends React.Component{
 	render(){
 		if(this.state.showProgress){
 			return(
-				<View style={{
-					flex: 1,
-					justifyContent: 'center'
-				}}>
+				<View style={styles.container}>
 					<ActivityIndicatorIOS
 						size="large"
-						animating={true} />
+						animating={true}
+						style={styles.loader} />
 				</View>
 			);
 		}
 		return (
-			<View style={{
-				flex: 1,
-				justifyContent: 'center'
-			}}>
+			<View style={styles.container}>
 				<ListView
 					dataSource={this.state.dataSource}
 					renderRow={this.renderRow.bind(this)} />
@@ -95,6 +113,15 @@ class GiraRequestListView extends React.Component{
 }
 
 var styles = StyleSheet.create({
+	container: {
+	  flex: 1,
+	  justifyContent: 'center',
+	  alignItems: 'center',
+	  backgroundColor: '#F5FCFF',
+	},
+	loader: {
+	    marginTop: 20
+	},
     repoCell: {
         width: 50,
         alignItems: 'center'

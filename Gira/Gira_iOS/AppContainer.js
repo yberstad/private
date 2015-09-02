@@ -45,6 +45,8 @@ class AppContainer extends Component {
 			rightButtonTitle: 'Lagre',
 			passProps: {
 				ref: this.onGiraRequestAddViewRef,
+				culture: this.props.culture,
+				giraRequestType : this.props.giraRequestType
 			},
 			onRightButtonPress: () => { _giraRequestAddView && _giraRequestAddView.insertItem(); }
 		});

@@ -12,16 +12,26 @@ var {
 var Login = require('./Login');
 var AppContainer = require('./AppContainer');
 var AzureApi = require('./AzureApi');
+var Culture = require('NativeModules').CultureInfo;
 
 var Gira_iOS = React.createClass({
 	componentDidMount: function(){
-		/*ßAzureApi.removeAuthInfo();*/
-		AzureApi.getAuthInfo((err, authInfo) => {
+		//AzureApi.removeAuthInfo();
+		Culture.getCultureInfo((cultureInfo) => {
+			var culture = (cultureInfo) ? cultureInfo.replace('_', '-') : 'nb-NO';
 			this.setState({
-				checkingAuth: false,
-				isLoggedIn: authInfo != null
+				culture: culture
 			});
 		});
+		AzureApi.getAuthInfo((err, authInfo) => {
+			AzureApi.getGiraTypeList(authInfo, (err, data) => {
+				this.setState({
+					checkingAuth: false,
+					isLoggedIn: authInfo != null,
+					giraRequestType: data
+				});
+			});
+		});	
 	},
 
 	render: function() {
@@ -38,7 +48,7 @@ var Gira_iOS = React.createClass({
 
 		if(this.state.isLoggedIn){
 			return(
-				<AppContainer />
+				<AppContainer culture={this.state.culture} giraRequestType={this.state.giraRequestType} />
 			);
 		}
 		else{
@@ -55,7 +65,9 @@ var Gira_iOS = React.createClass({
 	getInitialState: function(){
 		return {
 			isLoggedIn: false,
-			checkingAuth: true
+			checkingAuth: true,
+			culture: 'nb-NO',
+			giraRequestType: null
 		};
 	}
 });
