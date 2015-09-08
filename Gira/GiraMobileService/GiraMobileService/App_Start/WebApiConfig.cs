@@ -1,7 +1,11 @@
 ﻿using System.Data.Entity.Migrations;
 using System.Web.Http;
+using System.Web.Http.OData.Builder;
+using System.Web.Http.OData.Extensions;
 using GiraMobileService.Migrations;
 using Microsoft.WindowsAzure.Mobile.Service;
+using GiraMobileService.DataObjects;
+using GiraMobileService.DataObjects.Models;
 
 namespace GiraMobileService
 {
@@ -19,10 +23,15 @@ namespace GiraMobileService
             // line. Comment it out again when you deploy your service for production use.  
             config.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
 
-            config.SetIsHosted(true);
+            //config.SetIsHosted(true);
 
             var migrator = new DbMigrator(new Configuration());
             migrator.Update();
+
+            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            builder.EntitySet<GiraRequestModel>("GiraRequestsOdata");
+            builder.EntitySet<GiraType>("GiraTypes");
+            config.Routes.MapODataServiceRoute("odata", "odata", builder.GetEdmModel());
         }
     }
 }
