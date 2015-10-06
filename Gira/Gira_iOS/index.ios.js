@@ -24,13 +24,15 @@ var Gira_iOS = React.createClass({
 			});
 		});
 		AzureApi.getAuthInfo((err, authInfo) => {
-			AzureApi.getGiraTypeList(authInfo, (err, data) => {
-				this.setState({
-					checkingAuth: false,
-					isLoggedIn: authInfo != null,
-					giraRequestType: data
+			if(authInfo){
+				AzureApi.getGiraTypeList(authInfo, (err, data) => {
+					this.setState({
+						checkingAuth: false,
+						isLoggedIn: true,
+						giraRequestType: data
+					});
 				});
-			});
+			}
 		});	
 	},
 
@@ -53,12 +55,18 @@ var Gira_iOS = React.createClass({
 		}
 		else{
 			return (
-				<Login onLogin={this.onLogin} />
+				<Login onLoggedIn={this.onLoggedIn} onStartLogin={this.onStartLogin}/>
 			);
 		}
 	},
-	onLogin: function(){
+	onStartLogin: function(){
 		this.setState({
+			checkingAuth: true
+		});
+	},
+	onLoggedIn: function(){
+		this.setState({
+			checkingAuth: false,
 			isLoggedIn: true
 		});
 	},
@@ -88,6 +96,9 @@ var styles = StyleSheet.create({
     textAlign: 'center',
     color: '#333333',
     marginBottom: 5,
+  },
+  loader: {
+      marginTop: 20
   },
 });
 

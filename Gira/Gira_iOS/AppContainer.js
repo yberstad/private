@@ -72,6 +72,9 @@ class AppContainer extends Component {
 							rightButtonTitle: 'Ny',
 							onRightButtonPress: () => {
 								this.navigateToView()
+							},
+							passProps: {
+								culture: this.props.culture
 							}
 						}}
 					/>
