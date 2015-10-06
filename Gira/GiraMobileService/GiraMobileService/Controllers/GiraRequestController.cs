@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Data.Entity;
 using System.Data.SqlTypes;
 using System.Linq;
 using System.Net.Http;
@@ -8,6 +9,7 @@ using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.OData;
 using GiraMobileService.DataObjects;
+using GiraMobileService.DataObjects.Models;
 using GiraMobileService.Models;
 using Microsoft.WindowsAzure.Mobile.Service;
 using Microsoft.WindowsAzure.Mobile.Service.Security;
@@ -15,7 +17,7 @@ using Newtonsoft.Json.Linq;
 
 namespace GiraMobileService.Controllers
 {
-    [AuthorizeLevel(AuthorizationLevel.User)]
+    //[AuthorizeLevel(AuthorizationLevel.User)]
     public class GiraRequestController : TableController<GiraRequest>
     {
         MobileServiceContext _context;
@@ -28,9 +30,23 @@ namespace GiraMobileService.Controllers
         }
 
         // GET tables/GiraRequest
-        public IQueryable<GiraRequest> GetAllGiraRequest()
+        public IQueryable<GiraRequestModel> GetAllGiraRequest()
         {
-            return Query(); 
+            _context.Database.Log = s => System.Diagnostics.Debug.WriteLine(s);
+            var giraRequestList = from g in _context.GiraRequests.Include(g => g.Type)
+                                  select new GiraRequestModel()
+                                  {
+                                      AllDay = g.AllDay,
+                                      Description = g.Description,
+                                      Id = g.Id,
+                                      GiraTypeName = g.Type.Name,
+                                      Date = g.Date,
+                                      StartTime = g.StartTime,
+                                      StopTime = g.StopTime,
+                                      CreatedBy = g.CreatedBy,
+                                      Location = g.Location
+                                  };
+            return giraRequestList;
         }
 
         // GET tables/GiraRequest/48D68C86-6EA6-4C25-AA33-223FC9A27959

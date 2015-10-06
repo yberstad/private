@@ -1,8 +1,7 @@
 namespace GiraMobileService.Migrations
 {
-    using System;
     using System.Data.Entity.Migrations;
-    
+
     public partial class FifthhMigration : DbMigration
     {
         public override void Up()

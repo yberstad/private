@@ -20,6 +20,7 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -48,11 +49,13 @@
     <Reference Include="AutoMapper.Net4">
       <HintPath>..\packages\AutoMapper.3.2.1\lib\net40\AutoMapper.Net4.dll</HintPath>
     </Reference>
-    <Reference Include="EntityFramework">
-      <HintPath>..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.dll</HintPath>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="EntityFramework.SqlServer">
-      <HintPath>..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.AspNet.Identity.Core">
       <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.0.1\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
@@ -185,10 +188,14 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AppCode\Attributes\JsonDateFormatter.cs" />
     <Compile Include="AppCode\Services\UserService.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\GiraRequestAcknowledgeController.cs" />
     <Compile Include="Controllers\GiraRequestController.cs" />
+    <Compile Include="Controllers\GiraRequestsApiController.cs" />
+    <Compile Include="Controllers\GiraRequestsOdataController.cs" />
+    <Compile Include="Controllers\GiraRequetTestApiController.cs" />
     <Compile Include="Controllers\GiraSubscriptionController.cs" />
     <Compile Include="Controllers\GiraTypeController.cs" />
     <Compile Include="Controllers\GiraUserController.cs" />
@@ -197,6 +204,7 @@
     <Compile Include="DataObjects\GiraSubscription.cs" />
     <Compile Include="DataObjects\GiraType.cs" />
     <Compile Include="DataObjects\GiraUser.cs" />
+    <Compile Include="DataObjects\Models\GiraRequestModel.cs" />
     <Compile Include="Migrations\201507152020283_Initial.cs" />
     <Compile Include="Migrations\201507152020283_Initial.Designer.cs">
       <DependentUpon>201507152020283_Initial.cs</DependentUpon>
@@ -246,6 +254,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\PublishProfiles\mobile-GiraMobileService %282%29.pubxml" />
+    <None Include="Properties\PublishProfiles\mobile-GiraMobileService %283%29.pubxml" />
     <None Include="Properties\PublishProfiles\mobile-GiraMobileService.pubxml" />
   </ItemGroup>
   <ItemGroup>

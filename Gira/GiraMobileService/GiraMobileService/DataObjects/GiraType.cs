@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.WindowsAzure.Mobile.Service;
+﻿using Microsoft.WindowsAzure.Mobile.Service;
 
 namespace GiraMobileService.DataObjects
 {
