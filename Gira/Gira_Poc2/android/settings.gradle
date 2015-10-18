@@ -1,0 +1,3 @@
+rootProject.name = 'Gira_Poc2'
+
+include ':app'

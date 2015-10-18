@@ -15,25 +15,6 @@ var AzureApi = require('./AzureApi');
 var Culture = require('NativeModules').CultureInfo;
 
 var Gira_iOS = React.createClass({
-	componentDidMount: function(){
-		//AzureApi.removeAuthInfo();
-		Culture.getCultureInfo((cultureInfo) => {
-			var culture = (cultureInfo) ? cultureInfo.replace('_', '-') : 'nb-NO';
-			this.setState({
-				culture: culture
-			});
-		});
-		AzureApi.getAuthInfo((err, authInfo) => {
-			AzureApi.getGiraTypeList(authInfo, (err, data) => {
-				this.setState({
-					checkingAuth: false,
-					isLoggedIn: authInfo != null,
-					giraRequestType: data
-				});
-			});
-		});	
-	},
-
 	render: function() {
 		if(this.state.checkingAuth){
 			return (
@@ -53,22 +34,55 @@ var Gira_iOS = React.createClass({
 		}
 		else{
 			return (
-				<Login onLogin={this.onLogin} />
+				<Login onLoggedIn={this.onLoggedIn} onStartLogin={this.onStartLogin}/>
 			);
 		}
 	},
-	onLogin: function(){
+	onStartLogin: function(){
 		this.setState({
+			checkingAuth: true
+		});
+	},
+	onLoggedIn: function(){
+		this.getGiraRequestType();
+		this.setState({
+			checkingAuth: false,
 			isLoggedIn: true
+		});
+	},
+	getGiraRequestType: function(){
+		AzureApi.getAuthInfo((err, authInfo) => {
+			if(authInfo){
+				AzureApi.getGiraTypeList(authInfo, (err, data) => {
+					this.setState({
+						checkingAuth: false,
+						isLoggedIn: true,
+						giraRequestType: data
+					});
+				});
+			}
+		});	
+	},
+	getCultureInfo: function(){
+		Culture.getCultureInfo((cultureInfo) => {
+			var culture = (cultureInfo) ? cultureInfo.replace('_', '-') : 'nb-NO';
+			this.setState({
+				culture: culture
+			});
 		});
 	},
 	getInitialState: function(){
 		return {
 			isLoggedIn: false,
-			checkingAuth: true,
+			checkingAuth: false,
 			culture: 'nb-NO',
 			giraRequestType: null
 		};
+	},
+	componentDidMount: function(){
+		//AzureApi.removeAuthInfo();
+		this.getCultureInfo();
+		this.getGiraRequestType();
 	}
 });
 
@@ -88,6 +102,9 @@ var styles = StyleSheet.create({
     textAlign: 'center',
     color: '#333333',
     marginBottom: 5,
+  },
+  loader: {
+      marginTop: 20
   },
 });
 

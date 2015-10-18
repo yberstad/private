@@ -71,7 +71,7 @@ var options = {
 		startTime: {
 			label: 'Start',
 			mode: 'time',
-			minuteInterval: '30',
+			minuteInterval: 30,
 			stylesheet: picker,
 			hide: true,
 			collapsed: true,
@@ -82,7 +82,7 @@ var options = {
 		stopTime:{
 			label: 'Slutt',
 			mode: 'time',
-			minuteInterval:'30',
+			minuteInterval: 30,
 			stylesheet: picker,
 			hide: true,
 			collapsed: true,

@@ -21,9 +21,12 @@ class Login extends Component{
 	onLoginPressed(provider){
 		AzureApi.login(provider, (err, info) =>
 		{
-			if(err == null && this.props.onLogin)
-			{
-				this.props.onLogin();
+			if(this.props.onStartLogin){
+				this.props.onStartLogin();
+			}
+
+			if(err == null && this.props.onLoggedIn){
+				this.props.onLoggedIn();
 			}
 		});
 	}

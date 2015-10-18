@@ -6,11 +6,14 @@ var {
 	ListView,
 	ActivityIndicatorIOS,
 	TouchableHighlight,
-	StyleSheet
+	StyleSheet,
+	Image,
+	PixelRatio
 } = React;
 
 var AzureApi = require('./AzureApi');
 var GiraRequestView = require('./GiraRequestView');
+var dateFormat = {year: 'numeric', month: 'long', day: 'numeric'};
 
 class GiraRequestListView extends React.Component{
 	constructor(props){
@@ -48,44 +51,39 @@ class GiraRequestListView extends React.Component{
 
 	rowPressed(giraRequest) {
 		this.props.navigator.push({
-		title: "GiraRequest",
+		title: giraRequest.giraTypeName,
 		component: GiraRequestView,
-		passProps: {giraRequest: giraRequest}
+		passProps: {
+			giraRequest: giraRequest,
+			culture: this.props.culture
+		}
 		});
 	}
 
 	renderRow(rowData)
 	{
+		var date = new Date(Date.parse(rowData.date));
+		var dateAsString = date.toLocaleDateString(this.props.culture, dateFormat);
+		var userInfo = (rowData.createdByUserId) ? rowData.createdByUserId.split(':') : undefined;
+
+		var imageUrl =  '';
+		if(userInfo[0] == 'Facebook')
+		{
+			imageUrl = 'https://graph.facebook.com/' + userInfo[1] + '/picture?type=square'
+		}
+		
 		return (
 			<TouchableHighlight onPress={() => this.rowPressed(rowData)}
         		underlayColor='#dddddd'>
-	            <View style={{
-	                padding: 20,
-	                borderColor: '#D7D7D7',
-	                borderBottomWidth: 1,
-	                backgroundColor: '#fff'
-	            }}>
-	                <Text style={{
-	                    fontSize: 20,
-	                    fontWeight: '600'
-	                }}>
-	                    {rowData.giraTypeRefId}
-	                </Text>
-
-	                <View style={{
-	                    flex: 1,
-	                    flexDirection: 'row',
-	                    justifyContent: 'space-between',
-	                    marginTop: 20,
-	                    marginBottom: 20
-	                }}>
-
-	                    <View style={styles.repoCell}>
-	                        <Text style={styles.repoCellLabel}>
-	                            {rowData.description}
-	                        </Text>
-	                    </View>
-	                </View>
+	            <View style={styles.rowContainer}>
+	            	<Image style={styles.thumb} source={{ uri: imageUrl }} />
+		            <View  style={styles.textContainer}>
+		              <Text style={styles.title}>{rowData.giraTypeName}</Text>		
+		              <Text style={styles.description} numberOfLines={1}>{rowData.description}</Text>
+		              <View style={styles.detailsContainer}>
+			              <Text style={styles.detailsText}>{dateAsString}, {rowData.createdByUserName}</Text>
+		              </View>
+		            </View>
 	            </View>
 			</TouchableHighlight>
 		);	
@@ -114,25 +112,52 @@ class GiraRequestListView extends React.Component{
 
 var styles = StyleSheet.create({
 	container: {
-	  flex: 1,
-	  justifyContent: 'center',
-	  alignItems: 'center',
-	  backgroundColor: '#F5FCFF',
+		    flex: 1,
+		    flexDirection: 'row',
+		    backgroundColor: '#F5FCFF',
 	},
 	loader: {
 	    marginTop: 20
 	},
-    repoCell: {
-        width: 50,
-        alignItems: 'center'
+    textContainer: {
+      flex: 1,
+      paddingLeft: 5
     },
-    repoCellIcon: {
-        width: 20,
-        height: 20
+    detailsContainer: {
+    	flex: 1,
+      	flexDirection: 'row'
     },
-    repoCellLabel: {
-        textAlign: 'center'
-    }
+    description: {
+		fontSize: 12,
+		color: '#656565',
+		paddingLeft: 5
+    },
+    title: {
+    	flex: 2,
+		fontSize: 16,
+		color: '#656565'
+    },
+    detailsText: {
+    	flex: 1,
+		fontSize: 10,
+		color: '#656565',
+		paddingLeft: 5
+    },
+    rowContainer: {
+    	flex: 1,
+    	flexDirection: 'row',
+      padding: 10,
+      backgroundColor: '#fff',
+      borderColor: '#D7D7D7',
+	  borderBottomWidth: 1
+    },
+    thumb: {
+	    width: 30,
+	    height: 30,
+	    marginRight: 5,
+	    marginTop: 5,
+		borderRadius: 30 / PixelRatio.get(),
+  },      
 });
 
 module.exports = GiraRequestListView;
