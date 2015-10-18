@@ -13,5 +13,7 @@ namespace GiraMobileService.DataObjects.Models
         public string CreatedBy { get; set; }
         public string Description { get; set; }
         public string GiraTypeName { get; set; }
+        public string CreatedByUserName { get; set; }
+        public string CreatedByUserId { get; set; }
     }
 }

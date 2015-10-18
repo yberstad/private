@@ -23,6 +23,7 @@ namespace GiraMobileService.DataObjects
         public string CreatedBy { get; set; }
         public bool Enabled { get; set; }
         public string Description { get; set; }
+        public bool UsePrivateConversation { get; set; }
 
         public string GiraTypeRefId { get; set; }
         [ForeignKey("GiraTypeRefId")]

@@ -6,7 +6,6 @@ namespace GiraMobileService.DataObjects
     public class GiraRequestAcknowledge : EntityData
     {
 		public string Message { get; set; }
-		public bool ShowContactInfo { get; set; }
         public string CreatedBy { get; set; }
 
         public string GiraRequestRefId { get; set; }

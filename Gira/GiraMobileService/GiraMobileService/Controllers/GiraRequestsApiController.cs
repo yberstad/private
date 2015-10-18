@@ -18,7 +18,7 @@ namespace GiraMobileService.Controllers
         // GET: api/GiraRequestsApi
         public IQueryable<GiraRequestModel> GetGiraRequests()
         {
-            db.Database.Log = s => System.Diagnostics.Debug.WriteLine(s);
+            db.Database.Log = Log;
             var giraRequestList = from g in db.GiraRequests.Include(g => g.Type)
                                   select new GiraRequestModel()
                                   {
@@ -33,6 +33,11 @@ namespace GiraMobileService.Controllers
                                       Location = g.Location
                                   };
             return giraRequestList;
+        }
+
+        private void Log(string log)
+        {
+            System.Diagnostics.Debug.WriteLine(log);
         }
 
         // GET: api/GiraRequestsApi/5

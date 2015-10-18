@@ -32,8 +32,9 @@ namespace GiraMobileService.Controllers
         // GET tables/GiraRequest
         public IQueryable<GiraRequestModel> GetAllGiraRequest()
         {
-            _context.Database.Log = s => System.Diagnostics.Debug.WriteLine(s);
+            _context.Database.Log = Log;
             var giraRequestList = from g in _context.GiraRequests.Include(g => g.Type)
+                join user in _context.GiraUsers on g.CreatedBy equals user.Id
                                   select new GiraRequestModel()
                                   {
                                       AllDay = g.AllDay,
@@ -44,11 +45,17 @@ namespace GiraMobileService.Controllers
                                       StartTime = g.StartTime,
                                       StopTime = g.StopTime,
                                       CreatedBy = g.CreatedBy,
-                                      Location = g.Location
+                                      Location = g.Location,
+                                      CreatedByUserName = user.UserName,
+                                      CreatedByUserId = user.UserId
                                   };
             return giraRequestList;
         }
 
+        private void Log(string log)
+        {
+            System.Diagnostics.Debug.WriteLine(log);
+        }
         // GET tables/GiraRequest/48D68C86-6EA6-4C25-AA33-223FC9A27959
         public SingleResult<GiraRequest> GetGiraRequest(string id)
         {
