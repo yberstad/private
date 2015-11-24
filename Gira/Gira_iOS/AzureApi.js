@@ -89,6 +89,36 @@ class AzureApi {
 	    	callback(error, null);
 		});
 	}
+	
+	insertChatMessage(value, giraRequestId, authInfo, callback)
+	{
+		var body = {message: value, giraRequestRefId: giraRequestId};
+		var url = 'http://' + host + '/tables/GiraRequestAcknowledge';
+	  	fetch(url, {
+	    	method: 'post',
+	    	headers: authInfo.headers,
+	    	body: JSON.stringify(body)
+		})
+		.then(response => response.json())
+		.then(json => callback(null, json))
+		.catch(error => {
+	    	callback(error, null);
+		});
+	}
+
+	getChatMessageList(authInfo, giraRequestId, callback)
+	{
+		var url = 'http://' + host + '/tables/GiraRequestAcknowledge?giraRequestId=' + giraRequestId;
+	  	fetch(url, {
+	    	method: 'get',
+	    	headers: authInfo.headers
+		})
+		.then(response => response.json())
+		.then(json => callback(null, json))
+		.catch(error => {
+	    	callback(error, null);
+		});
+	}
 }
 
 module.exports = new AzureApi();
