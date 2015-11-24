@@ -204,6 +204,7 @@
     <Compile Include="DataObjects\GiraSubscription.cs" />
     <Compile Include="DataObjects\GiraType.cs" />
     <Compile Include="DataObjects\GiraUser.cs" />
+    <Compile Include="DataObjects\Models\GiraRequestChatModel.cs" />
     <Compile Include="DataObjects\Models\GiraRequestModel.cs" />
     <Compile Include="Migrations\201507152020283_Initial.cs" />
     <Compile Include="Migrations\201507152020283_Initial.Designer.cs">
@@ -224,6 +225,10 @@
     <Compile Include="Migrations\201507251834359_FifthhMigration.cs" />
     <Compile Include="Migrations\201507251834359_FifthhMigration.Designer.cs">
       <DependentUpon>201507251834359_FifthhMigration.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201511230850508_SixthMigration.cs" />
+    <Compile Include="Migrations\201511230850508_SixthMigration.Designer.cs">
+      <DependentUpon>201511230850508_SixthMigration.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\MobileServiceContext.cs" />
@@ -272,6 +277,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201507251834359_FifthhMigration.resx">
       <DependentUpon>201507251834359_FifthhMigration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201511230850508_SixthMigration.resx">
+      <DependentUpon>201511230850508_SixthMigration.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

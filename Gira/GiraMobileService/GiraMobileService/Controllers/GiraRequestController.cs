@@ -145,7 +145,7 @@ namespace GiraMobileService.Controllers
             {
                 await NewLocalUser(user);
             }
-;
+
             GiraRequest newGiraRequest = new GiraRequest
             {
                 CreatedBy = localUser != null ? localUser.Id : user.Id,
