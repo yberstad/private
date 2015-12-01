@@ -5,6 +5,7 @@ var t = require('tcomb-form-native');
 var collapsableDate = require('./CollapsableDate');
 var collapsablePicker = require('./CollapsablePicker');
 var AzureApi = require('./AzureApi');
+var FormStylesheet = require('./FormStylesheet');
 
 var {
 	View,
@@ -16,10 +17,9 @@ var {
 } = React;
 
 var Form = t.form.Form;
+Form.stylesheet = FormStylesheet;
 
 var multilineTextBox = JSON.parse(JSON.stringify(t.form.Form.stylesheet));
-multilineTextBox.textbox.normal.height = 60;
-multilineTextBox.textbox.error.height = 60;
 
 var picker = JSON.parse(JSON.stringify(t.form.Form.stylesheet));
 picker.select.normal.marginBottom = 1;
@@ -39,6 +39,7 @@ var options = {
 	auto: 'none',
 	fields:{
 		giraTypeRefId:{
+			label: 'Aktivitet',
 			nullOption: {value: '', text: 'Velg aktvietet'},
 			collapsed: true,
 			factory: collapsablePicker,
@@ -46,13 +47,13 @@ var options = {
 		},
 		description: {
 			placeholder: 'Beskrivelse',
-			multiline: true,
-			stylesheet: multilineTextBox,
-			error: 'Beskrivelse mangler'
+			error: 'Beskrivelse mangler',
+			placeholderTextColor: '#858591',
 		},
 		location: {
 			placeholder: 'Sted, Område, Klatrefelt',
-			error: 'Sted mangler'
+			error: 'Sted mangler',
+			placeholderTextColor: '#858591',
 		},
 		date:{
 			label: 'Dato',
@@ -66,7 +67,9 @@ var options = {
 		allDay:{
 			label: 'Hele dagen',
 			value: true,
-			stylesheet: checkBoxStyle
+			stylesheet: checkBoxStyle,
+			thumbTintColor: '#BEBEC1',
+			onTintColor: '#DDDDE6'
 		},
 		startTime: {
 			label: 'Start',
@@ -116,6 +119,8 @@ var GiraRequestAddView = React.createClass({
 		this.state.options.fields.date.onToggle = this.onToggleDate;
 		this.state.options.fields.startTime.onToggle = this.onToggleStart;
 		this.state.options.fields.stopTime.onToggle = this.onToggleStop;
+		this.state.options.fields.description.onFocus = this.onFocusTextbox;
+		this.state.options.fields.location.onFocus = this.onFocusTextbox;
 
 		this.state.options.fields.date.culture = this.props.culture;
 		this.state.options.fields.startTime.culture = this.props.culture;
@@ -128,8 +133,8 @@ var GiraRequestAddView = React.createClass({
 
 		GiraRequestInput = t.struct({
 			giraTypeRefId: t.enums(optionList),
-			description: t.Str,
-			location: t.Str,
+			description: t.maybe(t.Str),
+			location: t.maybe(t.Str),
 			date: t.Dat,
 			allDay: t.Bool,
 			startTime: t.maybe(t.Dat),
@@ -137,15 +142,45 @@ var GiraRequestAddView = React.createClass({
 		});
 	},
 
+	onFocusTextbox: function(){
+		var options = t.update(this.state.options, {
+	      fields: {
+	        giraTypeRefId: {
+	          collapsed: {'$set': true}
+	        },
+	       	date: {
+	          collapsed: {'$set': true}
+	        },
+	        startTime: {
+	          collapsed: {'$set': true}
+	        },
+	        stopTime: {
+	          collapsed: {'$set': true}
+	        }
+	      }
+	    });
+	    this.setState({options: options});
+	},
+
 	onToggleGiraRef: function(toggleValue){
 		var options = t.update(this.state.options, {
 	      fields: {
 	        giraTypeRefId: {
 	          collapsed: {'$set': !toggleValue}
-	        }
+	        },
+	       	date: {
+	          collapsed: {'$set': true}
+	        },
+	        startTime: {
+	          collapsed: {'$set': true}
+	        },
+	        stopTime: {
+	          collapsed: {'$set': true}
+	        }	        
 	      }
 	    });
 	    this.setState({options: options});
+	    this.refs.DummyInput.focus();
 	},
 
 	onToggleDate: function(toggleValue){
@@ -153,7 +188,16 @@ var GiraRequestAddView = React.createClass({
 	      fields: {
 	        date: {
 	          collapsed: {'$set': !toggleValue}
-	        }
+	        },
+	        giraTypeRefId: {
+	          collapsed: {'$set': true}
+	        },
+	        startTime: {
+	          collapsed: {'$set': true}
+	        },
+	        stopTime: {
+	          collapsed: {'$set': true}
+	        },
 	      }
 	    });
 	    this.setState({options: options});
@@ -164,7 +208,16 @@ var GiraRequestAddView = React.createClass({
 	      fields: {
 	        startTime: {
 	          collapsed: {'$set': !toggleValue}
-	        }
+	        },
+	        giraTypeRefId: {
+	          collapsed: {'$set': true}
+	        },
+	       	date: {
+	          collapsed: {'$set': true}
+	        },
+	        stopTime: {
+	          collapsed: {'$set': true}
+	        }	        
 	      }
 	    });
 	    this.setState({options: options});
@@ -175,7 +228,16 @@ var GiraRequestAddView = React.createClass({
 	      fields: {
 	        stopTime: {
 	          collapsed: {'$set': !toggleValue}
-	        }
+	        },
+	        giraTypeRefId: {
+	          collapsed: {'$set': true}
+	        },
+	       	date: {
+	          collapsed: {'$set': true}
+	        },
+	        startTime: {
+	          collapsed: {'$set': true}
+	        },	        
 	      }
 	    });
 	    this.setState({options: options});
@@ -239,7 +301,7 @@ var GiraRequestAddView = React.createClass({
 							 }]
 						);
 					}
-					else{
+					else{	
 						this.props.navigator.pop();
 					}
 				});
@@ -259,6 +321,7 @@ var GiraRequestAddView = React.createClass({
 				    value={this.state.value}
 				    onChange={this.onChange}
 				    />
+				    <TextInput ref='DummyInput' style={styles.hidden}/>
 				</View>
 			</ScrollView>
 		);
@@ -273,6 +336,9 @@ var styles = React.StyleSheet.create({
 	    marginTop: 10,
 	    padding: 5,
 	    backgroundColor: '#ffffff'
+    },
+    hidden:{
+    	opacity: 0
     }
 });
 

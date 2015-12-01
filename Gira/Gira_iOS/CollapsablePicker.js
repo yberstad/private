@@ -1,7 +1,8 @@
 'use strict';
 
 var React = require('react-native');
-var { View, Text, TouchableHighlight, PickerIOS, StyleSheet } = React;
+var Collapsible = require('react-native-collapsible');
+var { View, Text, TouchableOpacity, PickerIOS, StyleSheet } = React;
 var t = require('tcomb-form-native');
 var Select = t.form.Select;
 class CollapsablePicker extends Select {
@@ -38,44 +39,29 @@ class CollapsablePicker extends Select {
       {
           return(<View></View>);
       }
-
-      if(locals.collapsed){
-        return (
-          <View style={formGroupStyle}>
-            <TouchableHighlight style={styles.button} onPress={() => locals.onToggle(locals.collapsed)} underlayColor="#ffffff">
-              <View style={styles.buttonView}>
-                  <Text style={styles.buttonLabel}>{locals.label}</Text> 
-                  <Text style={styles.buttonDate}>{valueAsText}</Text> 
-              </View>
-            </TouchableHighlight>
-            {help}
-            {error}
+      var options = locals.options.map(({value, text}) => <PickerIOS.Item key={value} value={value} label={text} />);
+      return (
+      <View style={formGroupStyle}>
+        <TouchableOpacity onPress={() => locals.onToggle(locals.collapsed)} underlayColor="#ffffff">
+          <View style={styles.buttonView}>
+              <Text style={[controlLabelStyle, styles.buttonLabel]}>{locals.label}</Text> 
+              <Text style={[stylesheet.textbox.inputfont, styles.buttonDate]}>{valueAsText}</Text>
           </View>
-        );
-      }
-      else {
-        var options = locals.options.map(({value, text}) => <PickerIOS.Item key={value} value={value} label={text} />);
-        return (
-        <View style={formGroupStyle}>
-          <TouchableHighlight style={styles.button} onPress={() => locals.onToggle(locals.collapsed)} underlayColor="#ffffff">
-            <View style={styles.buttonView}>
-                <Text style={styles.buttonLabel}>{locals.label}</Text> 
-                <Text style={styles.buttonDate}>{valueAsText}</Text>
-            </View>
-          </TouchableHighlight>
-          <PickerIOS
-            ref="input"
-            style={selectStyle}
-            selectedValue={locals.value}
-            onValueChange={locals.onChange}
-          >
-            {options}
-          </PickerIOS>
-          {help}
-          {error}
-          </View>
-        );
-      }
+          <Collapsible collapsed={locals.collapsed}>
+            <PickerIOS
+              ref="input"
+              style={selectStyle}
+              selectedValue={locals.value}
+              onValueChange={locals.onChange}
+            >
+              {options}
+            </PickerIOS>
+          </Collapsible>
+        </TouchableOpacity>
+        {help}
+        {error}
+        </View>
+      );    
     }
   }
 
@@ -108,29 +94,18 @@ class CollapsablePicker extends Select {
 
 var styles = StyleSheet.create({
   buttonView: {
-    flexDirection: 'row'
+    flexDirection: 'row',
+    height: 36
   },
   buttonLabel: {
     flex: 1,
-    fontSize: 17,
-    color: '#000000',
-    alignSelf: 'flex-start'
+    alignSelf: 'center',
+    marginBottom: 0
   },
   buttonDate: {
-    flex: 2,
-    fontSize: 17,
-    color: '#000000',
-    alignSelf: 'flex-end'
-  },
-  button: {
-    height: 36,
-    backgroundColor: '#ffffff',
-    borderColor: '#cccccc',
-    borderTopWidth: 1,
-    borderBottomWidth: 1,
-    marginBottom: 10,
-    alignSelf: 'stretch',
-    justifyContent: 'center'
+    flex: 1,
+    alignSelf: 'center',
+    marginBottom: 0
   }
 });
 

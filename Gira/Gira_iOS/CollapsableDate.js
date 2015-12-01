@@ -1,13 +1,15 @@
 'use strict';
 
 var React = require('react-native');
-var { View, Text, TouchableHighlight, DatePickerIOS, StyleSheet } = React;
+var Collapsible = require('react-native-collapsible');
+var Animatable = require('react-native-animatable');
+var { View, Text, TouchableOpacity, DatePickerIOS, StyleSheet } = React;
 var t = require('tcomb-form-native');
 var DatePicker = t.form.DatePicker;
 class CollapsableDate extends DatePicker {
 
   // this is the only required method to implement
-  getTemplate() {
+  getTemplate() { 
     return function (locals) {
 
       var stylesheet = locals.stylesheet;
@@ -30,66 +32,54 @@ class CollapsableDate extends DatePicker {
       var label = locals.label ? <Text style={controlLabelStyle}>{locals.label}</Text> : null;
       var help = locals.help ? <Text style={helpBlockStyle}>{locals.help}</Text> : null;
       var error = locals.hasError && locals.error ? <Text style={errorBlockStyle}>{locals.error}</Text> : null;
-      var dateOrTimeAsString = locals.mode == 'time' ? 
-        locals.value.toLocaleTimeString(locals.culture, timeFormat) : 
-        locals.value.toLocaleDateString(locals.culture, dateFormat);
+      var dateOrTimeAsString = '';
+      if(locals.mode == 'time')
+      {
+        // Could not get "locals.value.toLocaleTimeString(locals.culture, timeFormat)" to work...
+        var pad = '00'
+        var hours = locals.value.getHours() + '';
+        var minutes = locals.value.getMinutes() + '';
+        dateOrTimeAsString = pad.substring(hours.length) + hours  + ':' + pad.substring(minutes.length) + minutes;
+      } 
+      else{
+        dateOrTimeAsString = locals.value.toLocaleDateString(locals.culture, dateFormat);
+      }
 
       if(locals.hide)
       {
           return(<View></View>);
       }
-
-      if(locals.collapsed){
-        return (
-          <View style={formGroupStyle}>
-            <TouchableHighlight style={styles.button} onPress={() => {
-                  if(locals.onToggle){
-                    locals.onToggle(locals.collapsed);
-                  }
+      return (
+      <View style={formGroupStyle}>
+        <TouchableOpacity onPress={() => {
+                if(locals.onToggle){
+                  locals.onToggle(locals.collapsed);
                 }
-              } 
-              underlayColor="#ffffff">
-              <View style={styles.buttonView}>
-                  <Text style={styles.buttonLabel}>{locals.label}</Text> 
-                  <Text style={styles.buttonDate}>{dateOrTimeAsString}</Text> 
-              </View>
-            </TouchableHighlight>
-            {help}
-            {error}
-          </View>
-        );
-      }
-      else {
-        return (
-        <View style={formGroupStyle}>
-          <TouchableHighlight style={styles.button} onPress={() => {
-                  if(locals.onToggle){
-                    locals.onToggle(locals.collapsed);
-                  }
-                }
-              } 
-              underlayColor="#ffffff">
-            <View style={styles.buttonView}>
-                <Text style={styles.buttonLabel}>{locals.label}</Text> 
-                <Text style={styles.buttonDate}>{dateOrTimeAsString}</Text>
-            </View>
-          </TouchableHighlight>
-          <DatePickerIOS
-            ref="input"
-            maximumDate={locals.maximumDate}
-            minimumDate={locals.minimumDate}
-            minuteInterval={locals.minuteInterval}
-            mode={locals.mode}
-            timeZoneOffsetInMinutes={locals.timeZoneOffsetInMinutes}
-            style={datepickerStyle}
-            onDateChange={(value) => locals.onChange(value)}
-            date={locals.value}
-          />
-          {help}
-          {error}
-          </View>
-        );
-      }
+              }
+            } 
+            underlayColor="#ffffff">
+          <View style={styles.buttonView}>
+              <Text style={[controlLabelStyle, styles.buttonLabel]}>{locals.label}</Text> 
+              <Text style={[stylesheet.textbox.inputfont, styles.buttonDate]}>{dateOrTimeAsString}</Text>
+          </View>       
+          <Collapsible collapsed={locals.collapsed}>
+            <DatePickerIOS
+              ref="input"
+              maximumDate={locals.maximumDate}
+              minimumDate={locals.minimumDate}
+              minuteInterval={locals.minuteInterval}
+              mode={locals.mode}
+              timeZoneOffsetInMinutes={locals.timeZoneOffsetInMinutes}
+              style={datepickerStyle}
+              onDateChange={(value) => locals.onChange(value)}
+              date={locals.value}
+            />
+          </Collapsible>
+        </TouchableOpacity>
+        {help}
+        {error}
+        </View>
+      );
     }
   }
 
@@ -112,29 +102,18 @@ class CollapsableDate extends DatePicker {
 
 var styles = StyleSheet.create({
   buttonView: {
-    flexDirection: 'row'
+    flexDirection: 'row',
+    height: 36
   },
   buttonLabel: {
     flex: 1,
-    fontSize: 17,
-    color: '#000000',
-    alignSelf: 'flex-start'
+    alignSelf: 'center',
+    marginBottom: 0
   },
   buttonDate: {
-    flex: 2,
-    fontSize: 17,
-    color: '#000000',
-    alignSelf: 'flex-end'
-  },
-  button: {
-    height: 36,
-    backgroundColor: '#ffffff',
-    borderColor: '#cccccc',
-    borderTopWidth: 1,
-    borderBottomWidth: 1,
-    marginBottom: 10,
-    alignSelf: 'stretch',
-    justifyContent: 'center'
+    flex: 1,
+    alignSelf: 'center',
+    marginBottom: 0
   }
 });
 
