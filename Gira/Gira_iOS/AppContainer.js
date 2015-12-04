@@ -1,6 +1,8 @@
 'use strict';
 
 var React = require('react-native');
+import ExNavigator from '@exponent/react-native-navigator';
+
 
 var {
 	Text,
@@ -58,26 +60,14 @@ class AppContainer extends Component {
 			<TabBarIOS style={styles.container}>
 				<TabBarIOS.Item
 					title="Gira liste"
-					selected={this.state.selectedTab == 'requestlist'}
-					
+					selected={this.state.selectedTab == 'requestlist'}	
 					onPress={() => this.setState({selectedTab: 'requestlist'})}
 				>
-					<NavigatorIOS
-						ref="startingPoint"
-						style={{flex: 1}}
-						initialRoute={{
-							backButtonTitle: 'Tilbake',
-							component: GiraRequestListView,
-							title: 'Aktiviteter',
-							rightButtonTitle: 'Ny',
-							onRightButtonPress: () => {
-								this.navigateToView()
-							},
-							passProps: {
-								culture: this.props.culture
-							}
-						}}
-					/>
+				     <ExNavigator
+				        initialRoute={YourRouter.getHomeRoute()}
+				        style={{ flex: 1 }}
+				        sceneStyle={{ paddingTop: 64 }}
+				      />
 				</TabBarIOS.Item>				
 				<TabBarIOS.Item
 					title="Legg til Gira"
@@ -103,6 +93,32 @@ class AppContainer extends Component {
 		);
 	}
 }
+
+let YourRouter = {
+  getHomeRoute() {
+    return {
+      // Return a React component class for the scene. It receives a prop
+      // called `navigator` that you can use to push on more routes.
+      getSceneClass() {
+        return require('./GiraRequestListView');
+      },
+
+      // When this scene receives focus, you can run some code. We're just
+      // proxying the `didfocus` event that Navigator emits, so refer to
+      // Navigator's source code for the semantics.
+      onDidFocus(event) {
+        console.log('Home Scene received focus.');
+      },
+
+      // Return a string to display in the title section of the navigation bar.
+      // This route's title is displayed next to the back button when you push
+      // a new route on top of this one.
+      getTitle() {
+        return 'Home';
+      },
+    };
+  }
+};
 
 var styles = StyleSheet.create({
 });
