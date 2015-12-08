@@ -1,33 +1,88 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- */
 'use strict';
 
 var React = require('react-native');
+
 var {
   AppRegistry,
   StyleSheet,
-  Text,
-  View,
+  ActivityIndicatorIOS,
+  View
 } = React;
+
+var Login = require('./app/Login');
+var AppContainer = require('./app/AppContainer');
+var AzureApi = require('./app/AzureApi');
+var Culture = require('NativeModules').CultureInfo;
 
 var GiraApp = React.createClass({
   render: function() {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Welcome to React Native!
-        </Text>
-        <Text style={styles.instructions}>
-          To get started, edit index.ios.js
-        </Text>
-        <Text style={styles.instructions}>
-          Press Cmd+R to reload,{'\n'}
-          Cmd+D or shake for dev menu
-        </Text>
-      </View>
-    );
+    if(this.state.checkingAuth){
+      return (
+        <View style={styles.container}>
+          <ActivityIndicatorIOS
+            animating={true}
+            size="large"
+            style={styles.loader} />
+        </View>
+      );
+    }
+
+    if(this.state.isLoggedIn){
+      return(
+        <AppContainer culture={this.state.culture} giraRequestType={this.state.giraRequestType} />
+      );
+    }
+    else{
+      return (
+        <Login onLoggedIn={this.onLoggedIn} onStartLogin={this.onStartLogin}/>
+      );
+    }
+  },
+  onStartLogin: function(){
+    this.setState({
+      checkingAuth: true
+    });
+  },
+  onLoggedIn: function(){
+    this.getGiraRequestType();
+    this.setState({
+      checkingAuth: false,
+      isLoggedIn: true
+    });
+  },
+  getGiraRequestType: function(){
+    AzureApi.getAuthInfo((err, authInfo) => {
+      if(authInfo){
+        AzureApi.getGiraTypeList(authInfo, (err, data) => {
+          this.setState({
+            checkingAuth: false,
+            isLoggedIn: true,
+            giraRequestType: data
+          });
+        });
+      }
+    }); 
+  },
+  getCultureInfo: function(){
+    Culture.getCultureInfo((cultureInfo) => {
+      var culture = (cultureInfo) ? cultureInfo.replace('_', '-') : 'nb-NO';
+      this.setState({
+        culture: culture
+      });
+    });
+  },
+  getInitialState: function(){
+    return {
+      isLoggedIn: false,
+      checkingAuth: false,
+      culture: 'nb-NO',
+      giraRequestType: null
+    };
+  },
+  componentDidMount: function(){
+    //AzureApi.removeAuthInfo();
+    this.getCultureInfo();
+    this.getGiraRequestType();
   }
 });
 
@@ -47,6 +102,9 @@ var styles = StyleSheet.create({
     textAlign: 'center',
     color: '#333333',
     marginBottom: 5,
+  },
+  loader: {
+      marginTop: 20
   },
 });
 

@@ -92,7 +92,7 @@ class CollapsableDate extends DatePicker {
     locals.culture = this.props.options.culture; 
     if(this.props.options.onToggle)
     {
-      locals.onToggle = this.props.options.onToggle.bind(this);
+      locals.onToggle = this.props.options.onToggle;
     }
 
     return locals;

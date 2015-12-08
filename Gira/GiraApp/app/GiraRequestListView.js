@@ -13,28 +13,43 @@ var {
 
 var AzureApi = require('./AzureApi');
 var GiraRequestView = require('./GiraRequestView');
+var AppRouter = require('./Router.js');
 var dateFormat = {year: 'numeric', month: 'long', day: 'numeric'};
+//var Subscribable = require('Subscribable');
 
-class GiraRequestListView extends React.Component{
-	constructor(props){
-		super(props);
+
+
+var GiraRequestListView = React.createClass({
+	//mixins: [Subscribable.Mixin],
+	getInitialState: function() {
 		var ds = new ListView.DataSource({
 			rowHasChanged: (r1, r2) => r1 != r2
 		});
 
-		this.state = {
+		return {
 			authInfo: '',
 			dataSource: ds,
 			showProgress: true
 		};
-	}
-	
-	componentDidMount()
+	},
+
+	/*componentWillMount: function(){
+		this.eventEmitter = new EventEmitter();
+	},*/
+
+	componentDidMount: function()
 	{
 		this.doSearch();
-	}
+		this.props.routeEvents.addListener('editing', this.goToAddView);
+	},
 
-	doSearch()
+	goToAddView: function ()
+	{
+		let appRouter = require('./Router.js');
+		this.props.navigator.push(appRouter.getAddGiraRequestView(this.props.culture, this.props.giraRequestType));
+	},
+
+	doSearch: function()
 	{
 		AzureApi.getAuthInfo((err, authInformation) => {
 			AzureApi.getGiraRequestList(authInformation, (error, data) => {
@@ -47,20 +62,13 @@ class GiraRequestListView extends React.Component{
 		});	
 
 
-	}
+	},
 
-	rowPressed(giraRequest) {
-		this.props.navigator.push({
-		title: giraRequest.giraTypeName,
-		component: GiraRequestView,
-		passProps: {
-			giraRequest: giraRequest,
-			culture: this.props.culture
-		}
-		});
-	}
+	rowPressed: function(giraRequest) {
+		this.props.navigator.push(AppRouter.getGiraRequestView(giraRequest, this.props.culture));
+	},
 
-	renderRow(rowData)
+	renderRow: function(rowData)
 	{
 		var date = new Date(Date.parse(rowData.date));
 		var dateAsString = date.toLocaleDateString(this.props.culture, dateFormat);
@@ -87,9 +95,9 @@ class GiraRequestListView extends React.Component{
 	            </View>
 			</TouchableHighlight>
 		);	
-	}
+	},
 
-	render(){
+	render: function(){
 		if(this.state.showProgress){
 			return(
 				<View style={styles.container}>
@@ -104,11 +112,11 @@ class GiraRequestListView extends React.Component{
 			<View style={styles.container}>
 				<ListView
 					dataSource={this.state.dataSource}
-					renderRow={this.renderRow.bind(this)} />
+					renderRow={this.renderRow} />
 			</View>
 		);
 	}
-}
+});
 
 var styles = StyleSheet.create({
 	container: {

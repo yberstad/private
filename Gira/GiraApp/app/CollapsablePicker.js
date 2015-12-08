@@ -82,7 +82,7 @@ class CollapsablePicker extends Select {
     locals.collapsed = this.props.options.collapsed;
     if(this.props.options.onToggle)
     {
-      locals.onToggle = this.props.options.onToggle.bind(this);
+      locals.onToggle = this.props.options.onToggle;
     }
 
     // add here your custom locals
