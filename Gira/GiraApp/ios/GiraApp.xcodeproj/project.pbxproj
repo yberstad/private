@@ -22,6 +22,7 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		146834051AC3E58100842450 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
+		EC10128D1C1E2F6D00E14787 /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EC10128C1C1E2F6C00E14787 /* Ionicons.ttf */; };
 		EC2548861C121ECA00079AD1 /* AzureMSClient.m in Sources */ = {isa = PBXBuildFile; fileRef = EC2548831C121ECA00079AD1 /* AzureMSClient.m */; };
 		EC2548871C121ECA00079AD1 /* CultureInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = EC2548851C121ECA00079AD1 /* CultureInfo.m */; };
 		EC25489E1C1232BE00079AD1 /* WindowsAzureMobileServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EC25489D1C1232BE00079AD1 /* WindowsAzureMobileServices.framework */; };
@@ -129,6 +130,7 @@
 		146833FF1AC3E56700842450 /* React.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = React.xcodeproj; path = "../node_modules/react-native/React/React.xcodeproj"; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
+		EC10128C1C1E2F6C00E14787 /* Ionicons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Ionicons.ttf; path = GiraApp.xcodeproj/Ionicons.ttf; sourceTree = "<group>"; };
 		EC2548821C121ECA00079AD1 /* AzureMSClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AzureMSClient.h; path = GiraApp/AzureMSClient.h; sourceTree = "<group>"; };
 		EC2548831C121ECA00079AD1 /* AzureMSClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AzureMSClient.m; path = GiraApp/AzureMSClient.m; sourceTree = "<group>"; };
 		EC2548841C121ECA00079AD1 /* CultureInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CultureInfo.h; path = GiraApp/CultureInfo.h; sourceTree = "<group>"; };
@@ -300,6 +302,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				EC10128C1C1E2F6C00E14787 /* Ionicons.ttf */,
 				EC25489C1C1231FD00079AD1 /* Framworks */,
 				13B07FAE1A68108700A75B9A /* GiraApp */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
@@ -529,6 +532,7 @@
 			files = (
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
+				EC10128D1C1E2F6D00E14787 /* Ionicons.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

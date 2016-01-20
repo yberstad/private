@@ -14,7 +14,11 @@ var {
 	Component,
 	AllertIOS,
 	ScrollView,
+	Image,
+	Dimensions
 } = React;
+
+var windowSize = Dimensions.get('window');
 
 var Form = t.form.Form;
 Form.stylesheet = FormStylesheet;
@@ -180,7 +184,6 @@ var GiraRequestAddView = React.createClass({
 	      }
 	    });
 	    this.setState({options: options});
-	    this.refs.DummyInput.focus();
 	},
 
 	onToggleDate: function(toggleValue){
@@ -312,18 +315,22 @@ var GiraRequestAddView = React.createClass({
 
 	render: function(){
 		return (
-			<ScrollView>
-				<View style={styles.container}>
-				  <Form
-				    ref="form"
-				    type={GiraRequestInput}
-				    options={this.state.options}
-				    value={this.state.value}
-				    onChange={this.onChange}
-				    />
-				    <TextInput ref='DummyInput' style={styles.hidden}/>
+			<View style={styles.container}>
+				<View style={styles.header}>
+					<Image source={require('image!modalheader')} style={styles.bg}/>
 				</View>
-			</ScrollView>
+				<ScrollView style={styles.body}>
+					<Form
+						ref="form"
+						type={GiraRequestInput}
+						options={this.state.options}
+						value={this.state.value}
+						onChange={this.onChange}
+						/>
+					<TextInput ref='DummyInput' style={styles.hidden}/>
+
+				</ScrollView>
+			</View>
 		);
 	}
 
@@ -332,10 +339,28 @@ var GiraRequestAddView = React.createClass({
 
 var styles = React.StyleSheet.create({
     container: {
+      flex: 1,
+      flexDirection: 'column'
+    },
+    header: {
+      flex: .2
+    },
+    body: {
+      flex: .8
+    },
+    scrollContainer: {
 	    justifyContent: 'center',
 	    marginTop: 10,
 	    padding: 5,
 	    backgroundColor: '#ffffff'
+    },
+    bg: {
+      position: 'absolute',
+      left: 0,
+      right: 0,
+      width: windowSize.width,
+      height:100,
+      flex: 1
     },
     hidden:{
     	opacity: 0

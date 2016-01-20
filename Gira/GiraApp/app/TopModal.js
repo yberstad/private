@@ -11,9 +11,11 @@ var {
   Navigator,
   TouchableOpacity,
   Animated,
-  Dimensions
+  Dimensions,
+  Image
 } = React;
 
+var windowSize = Dimensions.get('window');
 var {
   height: deviceHeight
 } = Dimensions.get('window');
@@ -54,9 +56,14 @@ class component extends Component {
 
       return (
         <Animated.View style={[styles.modal, styles.flexCenter, {transform: [{translateY: this.state.offset}]}]}>
-          <TouchableOpacity onPress={this.closeModal.bind(this)}>
-            <Text style={{color: '#FFF',textAlign: 'center'}}>Close Modal {'\n'} (You could place another ExNavigator here)</Text>
-          </TouchableOpacity>
+          <View style={styles.header}>
+            <Image source={require('image!modalheader')} style={styles.bg}/>
+          </View>
+          <View style={styles.body}>
+            <TouchableOpacity onPress={this.closeModal.bind(this)}>
+              <Text style={{color: '#FFF',textAlign: 'center'}}>Close Modal {'\n'} (You could place another ExNavigator here)</Text>
+            </TouchableOpacity>
+          </View>
         </Animated.View>
 
       )
@@ -65,13 +72,23 @@ class component extends Component {
 
 
 var styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   flexCenter: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
+    flexDirection: 'column'
+  },
+  header: {
+    flex: .2
+  },
+  body: {
+    flex: .8
+  },
+  bg: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    width: windowSize.width,
+    height:100,
+    flex: 1
   },
   modal: {
     backgroundColor: 'rgba(0,0,0,.8)',

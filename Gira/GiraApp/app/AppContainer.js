@@ -2,7 +2,8 @@
 
 var React = require('react-native');
 import ExNavigator from '@exponent/react-native-navigator';
-
+var ActionButton = require('react-native-action-button');
+var Icon = require('react-native-vector-icons/Ionicons');
 
 var {
 	Text,
@@ -69,33 +70,64 @@ class AppContainer extends Component {
 		});
 	}
 
+	navigateToView2(){
+		this.setState({ modalAddViewShow: false}); 
+		this.refs.navigator.push(AppRouter.getAddGiraRequestView(this.props.culture, this.props.giraRequestType));
+	}
+
 	render()
 	{
 		return (
-			<TabBarIOS style={styles.container}>
+			<View style={{flex:1, backgroundColor: '#f3f3f3'}}>
+		       <ExNavigator
+		       		ref="navigator"
+		  	        initialRoute={AppRouter.getGiraRequestListView(this.props.culture, this.props.giraRequestType)}
+		  	        style={{ flex: 1}}
+		  	        
+		  	      />
+		  	      {this.state.modalAddViewShow ? <AddGiraRequestModal closeModal={() => this.setState({ modalAddViewShow: false})}/> : null }
+
+			  <ActionButton buttonColor="rgba(231,76,60,1)">
+			    <ActionButton.Item buttonColor='#9b59b6' title="New Task" onPress={() => this.navigateToView2()}>
+			      <Icon name="android-create" style={styles.actionButtonIcon} />
+			    </ActionButton.Item>
+			    <ActionButton.Item buttonColor='#3498db' title="Notifications" onPress={() => {}}>
+			      <Icon name="android-notifications-none" style={styles.actionButtonIcon} />
+			    </ActionButton.Item>
+			    <ActionButton.Item buttonColor='#1abc9c' title="All Tasks" onPress={() => {}}>
+			      <Icon name="android-done-all" style={styles.actionButtonIcon} />
+			    </ActionButton.Item>
+			  </ActionButton>
+			</View>
+/*			<TabBarIOS style={styles.container}>
 				<TabBarIOS.Item
 					title="Gira liste"
 					selected={this.state.selectedTab == 'requestlist'}	
-					onPress={() => this.setState({selectedTab: 'requestlist'})}
+					onPress={() => this.setState({selectedTab: 'requestlist', modalAddViewShow: false})}
 				>
-				     <ExNavigator
-				        initialRoute={AppRouter.getGiraRequestListView(this.props.culture, this.props.giraRequestType)}
-				        style={{ flex: 1 }}
-				        sceneStyle={{ paddingTop: 64 }}
-				      />
+					<View style={styles.container}>
+						</View>
 				</TabBarIOS.Item>				
 				<TabBarIOS.Item
 					title="Legg til Gira"
 					selected={this.state.selectedTab == 'addRequest'}
-					onPress={()=> this.setState({selectedTab: 'addRequest', modalAddViewShow: true})}>
-					    {this.state.modalAddViewShow ? <AddGiraRequestModal closeModal={() => this.setState({selectedTab: 'requestlist', modalAddViewShow: false})}/> : null }
+					onPress={()=> this.setState({ modalAddViewShow: true})}>
 					</TabBarIOS.Item>
 			</TabBarIOS>
+*/
 		); 
 	}
 }
 
 var styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  actionButtonIcon: {
+    fontSize: 20,
+    height: 22,
+    color: 'white',
+  },
 });
 
 module.exports = AppContainer;

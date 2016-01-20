@@ -41,12 +41,13 @@ class CollapsablePicker extends Select {
       }
       var options = locals.options.map(({value, text}) => <PickerIOS.Item key={value} value={value} label={text} />);
       return (
-      <View style={formGroupStyle}>
-        <TouchableOpacity onPress={() => locals.onToggle(locals.collapsed)} underlayColor="#ffffff">
-          <View style={styles.buttonView}>
-              <Text style={[controlLabelStyle, styles.buttonLabel]}>{locals.label}</Text> 
-              <Text style={[stylesheet.textbox.inputfont, styles.buttonDate]}>{valueAsText}</Text>
-          </View>
+        <View style={formGroupStyle}>
+          <TouchableOpacity onPress={() => locals.onToggle(locals.collapsed)} underlayColor="#ffffff">
+            <View style={styles.buttonView}>
+                <Text style={[controlLabelStyle, styles.buttonLabel]}>{locals.label}</Text> 
+                <Text style={[stylesheet.textbox.inputfont, styles.buttonDate]}>{valueAsText}</Text>
+            </View>
+          </TouchableOpacity>
           <Collapsible collapsed={locals.collapsed}>
             <PickerIOS
               ref="input"
@@ -57,9 +58,8 @@ class CollapsablePicker extends Select {
               {options}
             </PickerIOS>
           </Collapsible>
-        </TouchableOpacity>
-        {help}
-        {error}
+          {help}
+          {error}
         </View>
       );    
     }

@@ -6,6 +6,7 @@ const host = 'giramobileservice.azure-mobile.net'
 const app_key = 'eXVPAWPzwWRkMbTgjqmolczVUtfpyo18';
 const tokenKey = 'tokenKey';
 const userIdKey = 'userIdKey';
+const giraTypeListKey = 'giraTypeListKey';
 
 var AzureManager = require('NativeModules').AzureMSClient;
 
@@ -63,15 +64,30 @@ class AzureApi {
 
 	getGiraTypeList(authInfo, callback)
 	{
-		var url = 'http://' + host + '/tables/GiraType';
-	  	fetch(url, {
-	    	method: 'get',
-	    	headers: authInfo.headers
-		})
-		.then(response => response.json())
-		.then(json => callback(null, json))
-		.catch(error => {
-	    	callback(error, null);
+		AsyncStorage.getItem(giraTypeListKey, (err, val) => {
+			
+			if(err){
+				return callback(err);
+			}
+
+			if(!val)
+			{
+				var url = 'http://' + host + '/tables/GiraType';
+			  	fetch(url, {
+			    	method: 'get',
+			    	headers: authInfo.headers
+				})
+				.then(response => response.json())
+				.then(json => {
+					AsyncStorage.setItem(giraTypeListKey, JSON.stringify(json));
+					callback(null, json);
+				})
+				.catch(error => {
+			    	callback(error, null);
+				});
+			}
+
+			return callback(null, JSON.parse(val));
 		});
 	}
 

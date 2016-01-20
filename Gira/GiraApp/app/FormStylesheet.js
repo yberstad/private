@@ -129,7 +129,6 @@ var stylesheet = Object.freeze({
   },
   checkbox: {
     normal: {
-      color: INPUT_COLOR,
       marginBottom: 4
     },
     // the style applied when a validation error occours

@@ -57,25 +57,25 @@ class CollapsableDate extends DatePicker {
                 }
               }
             } 
-            underlayColor="#ffffff">
+            underlayColor="#979191">
           <View style={styles.buttonView}>
               <Text style={[controlLabelStyle, styles.buttonLabel]}>{locals.label}</Text> 
               <Text style={[stylesheet.textbox.inputfont, styles.buttonDate]}>{dateOrTimeAsString}</Text>
           </View>       
-          <Collapsible collapsed={locals.collapsed}>
-            <DatePickerIOS
-              ref="input"
-              maximumDate={locals.maximumDate}
-              minimumDate={locals.minimumDate}
-              minuteInterval={locals.minuteInterval}
-              mode={locals.mode}
-              timeZoneOffsetInMinutes={locals.timeZoneOffsetInMinutes}
-              style={datepickerStyle}
-              onDateChange={(value) => locals.onChange(value)}
-              date={locals.value}
-            />
-          </Collapsible>
         </TouchableOpacity>
+        <Collapsible collapsed={locals.collapsed}>
+          <DatePickerIOS
+            ref="input"
+            maximumDate={locals.maximumDate}
+            minimumDate={locals.minimumDate}
+            minuteInterval={locals.minuteInterval}
+            mode={locals.mode}
+            timeZoneOffsetInMinutes={locals.timeZoneOffsetInMinutes}
+            style={datepickerStyle}
+            onDateChange={(value) => locals.onChange(value)}
+            date={locals.value}
+          />
+        </Collapsible>
         {help}
         {error}
         </View>
