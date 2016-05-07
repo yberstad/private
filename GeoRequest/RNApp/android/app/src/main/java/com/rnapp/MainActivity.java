@@ -1,4 +1,4 @@
-package com.rnapp;
+package com.transistorsoft.backgroundgeolocation.ionic;
 
 import com.facebook.react.ReactActivity;
 import com.AirMaps.AirPackage;
