@@ -5,7 +5,8 @@ import React, {
     StyleSheet,
     Platform,
     Text,
-    TouchableOpacity
+    TouchableOpacity,
+    Animated
 } from 'react-native';
 
 import ddpClient from '../ddp';
@@ -107,13 +108,25 @@ export default class testGeo extends Component {
     constructor(props) {
         super(props);
 
+        // var marker = {};
+        // marker.latlng = {
+        //     longitude: LATITUDE,
+        //     latitude: LONGITUDE
+        // };
+        // marker.title = 'Selected possition';
+        // marker.description = 'Press create to confirm selected position';
+        
         this.state = {
-            region: {
+            marker: new Animated.Region({
                 latitude: LATITUDE,
-                longitude: LONGITUDE,
-                latitudeDelta: LATITUDE_DELTA,
-                longitudeDelta: LONGITUDE_DELTA
-            },
+                longitude: LONGITUDE
+            }),
+            region: new Animated.Region({
+            latitude: LATITUDE,
+            longitude: LONGITUDE,
+            latitudeDelta: LATITUDE_DELTA,
+            longitudeDelta: LONGITUDE_DELTA
+        }),
             zoomEnabled: true,
             initialPosition: 'unknown',
             lastPosition: 'unknown'
@@ -174,7 +187,13 @@ export default class testGeo extends Component {
     }
 
     createEvent(){
-        this.props.createEventCallback(this.state.region);
+        var region = new Animated.Region({
+            latitude: this.state.marker.latitude,
+            longitude: this.state.marker.longitude,
+            latitudeDelta: this.state.region.latitudeDelta,
+            longitudeDelta: this.state.region.longitudeDelta
+        });
+        this.props.createEventCallback(region);
     }
 
     getRegion(){
@@ -183,22 +202,54 @@ export default class testGeo extends Component {
 
     onMapPress(e) {
         console.log(e.nativeEvent.coordinate);
+        // var region = new Animated.Region({
+        //     latitude: e.nativeEvent.coordinate.latitude,
+        //     longitude: e.nativeEvent.coordinate.longitude,
+        //     latitudeDelta: this.state.region.latitudeDelta,
+        //     longitudeDelta: this.state.region.longitudeDelta
+        // });
+
+        // var marker = {};
+        // marker.latlng = {
+        //     longitude: e.nativeEvent.coordinate.longitude,
+        //     latitude: e.nativeEvent.coordinate.latitude
+        // };
+        // marker.title = this.state.marker.title;
+        // marker.description = this.state.marker.description;
+
+        // var marker = new Animated.Region({
+        //     longitude: e.nativeEvent.coordinate.longitude,
+        //     latitude: e.nativeEvent.coordinate.latitude
+        // });
+
+        var { marker } = this.state;
+        marker.timing({
+            longitude: e.nativeEvent.coordinate.longitude,
+            latitude: e.nativeEvent.coordinate.latitude
+        }).start();
+
+        //this.setState({region: region});
     }
 
     onRegionChange(region) {
         this.setState({ region });
     }
 
+    getRegionAsText()
+    {
+        return this.state.region.latitude + ', ' + this.state.region.longitude + ', ' + this.state.region.latitudeDelta+ ', ' +this.state.region.longitudeDelta;
+    }
+
     render() {
         return (
             <View style={styles.container}>
-                <MapView
+                <MapView.Animated
                     ref="map"
                     style={styles.map}
                     region={this.getRegion()}
                     onRegionChange={(region) => this.onRegionChange(region)}
                     zoomEnabled={this.state.zoomEnabled}
-                    onPress={this.onMapPress}
+                    onPress={(e) => this.onMapPress(e)}
                 >
                     {this.props.markers.map(marker => (
                         <MapView.Marker
@@ -207,11 +258,14 @@ export default class testGeo extends Component {
                             description={marker.description}
                         />
                     ))}
-                </MapView>
+                    <MapView.Marker.Animated
+                        coordinate={this.state.marker}
+                    />
+                </MapView.Animated>
                 <View style={[styles.bubble, styles.latlng]}>
                     <Text style={{ textAlign: 'center'}}>
-                        ${this.state.region.latitude.toPrecision(7)} + ', ' + ${this.state.region.longitude.toPrecision(7)} + ', ' +  ${this.state.region.latitudeDelta.toPrecision(5)} + ', ' +  ${this.state.region.longitudeDelta.toPrecision(5)}
-                     </Text>
+                        {this.getRegionAsText()}
+                    </Text>
                 </View>
                 <View style={styles.buttonContainer}>
                     <TouchableOpacity onPress={() => this.createEvent()} style={[styles.bubble, styles.button]}>
