@@ -3,15 +3,24 @@ import React, {
     Component,
     View,
     StyleSheet,
-    Platform
+    Platform,
+    Text,
+    TouchableOpacity
 } from 'react-native';
 
 import ddpClient from '../ddp';
 
 var MapView = require('react-native-maps');
-var {width, height} = Dimensions.get('window');
+
 
 var BackgroundGeolocation = require('react-native-background-geolocation');
+var {width, height} = Dimensions.get('window');
+const ASPECT_RATIO = width / height;
+const LATITUDE = 59.90651;
+const LONGITUDE = 10.62827;
+const LATITUDE_DELTA = 0.0922;
+const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
+
 // if (Platform.OS === 'android')
 // {
 //     BackgroundGeolocation = require('react-native-background-geolocation-android');
@@ -62,25 +71,25 @@ var BackgroundGeolocation = require('react-native-background-geolocation');
 
 BackgroundGeolocation.configure({
     desiredAccuracy: 0,
-    stationaryRadius: 50,
-    distanceFilter: 50,
-    disableElasticity: false, // <-- [iOS] Default is 'false'.  Set true to disable speed-based distanceFilter elasticity
+    stationaryRadius: 1,
+    distanceFilter: 1,
+    disableElasticity: true, // <-- [iOS] Default is 'false'.  Set true to disable speed-based distanceFilter elasticity
     locationUpdateInterval: 5000,
     minimumActivityRecognitionConfidence: 80,   // 0-100%.  Minimum activity-confidence for a state-change
     fastestLocationUpdateInterval: 5000,
     activityRecognitionInterval: 10000,
-    stopDetectionDelay: 1,  // <--  minutes to delay after motion stops before engaging stop-detection system
-    stopTimeout: 2, // 2 minutes
-    activityType: 'AutomotiveNavigation',
-
-    // Application config
+    activityType: 'Fitness',
+    disableStopDetection: true,
+    // Application config,
+    stopDetectionDelay: 30,
     debug: true, // <-- enable this hear sounds for background-geolocation life-cycle.
     forceReloadOnLocationChange: false,  // <-- [Android] If the user closes the app **while location-tracking is started** , reboot app when a new location is recorded (WARNING: possibly distruptive to user)
     forceReloadOnMotionChange: false,    // <-- [Android] If the user closes the app **while location-tracking is started** , reboot app when device changes stationary-state (stationary->moving or vice-versa) --WARNING: possibly distruptive to user)
     forceReloadOnGeofence: false,        // <-- [Android] If the user closes the app **while location-tracking is started** , reboot app when a geofence crossing occurs --WARNING: possibly distruptive to user)
     stopOnTerminate: false,              // <-- [Android] Allow the background-service to run headless when user closes the app.
     startOnBoot: true,                   // <-- [Android] Auto start background-service in headless mode when device is powered-up.
-
+    pausesLocationUpdatesAutomatically: false,
+    stopTimeout: 30,
     // HTTP / SQLite config
     // url: 'http://posttestserver.com/post.php?dir=cordova-background-geolocation',
     // batchSync: false,       // <-- [Default: false] Set true to sync locations to server in a single HTTP request.
@@ -93,12 +102,6 @@ BackgroundGeolocation.configure({
     //     "auth_token": "maybe_your_server_authenticates_via_token_YES?"
     // }
 });
-
-const ASPECT_RATIO = width / height;
-const LATITUDE = 62.47222;
-const LONGITUDE = 6.14948;
-const LATITUDE_DELTA = 0.0922;
-const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 export default class testGeo extends Component {
     constructor(props) {
@@ -159,6 +162,7 @@ export default class testGeo extends Component {
                     timestamp: location.timestamp
                 }
                 ddpClient.call('addLocation', [locationData]);
+                BackgroundGeolocation.changePace(true);
                 console.log('- [js] BackgroundGeolocation received current position: ', JSON.stringify(location));
             }, function(error) {
                 alert("Location error: " + error);
@@ -169,8 +173,20 @@ export default class testGeo extends Component {
         // BackgroundGeolocation.stop();
     }
 
+    createEvent(){
+        this.props.createEventCallback(this.state.region);
+    }
+
+    getRegion(){
+        return (this.props.regionForEvent) ? this.props.regionForEvent : this.state.region;
+    }
+
     onMapPress(e) {
         console.log(e.nativeEvent.coordinate);
+    }
+
+    onRegionChange(region) {
+        this.setState({ region });
     }
 
     render() {
@@ -179,8 +195,8 @@ export default class testGeo extends Component {
                 <MapView
                     ref="map"
                     style={styles.map}
-                    region={this.state.region}
-                    onRegionChange={this.onRegionChange}
+                    region={this.getRegion()}
+                    onRegionChange={(region) => this.onRegionChange(region)}
                     zoomEnabled={this.state.zoomEnabled}
                     onPress={this.onMapPress}
                 >
@@ -192,6 +208,17 @@ export default class testGeo extends Component {
                         />
                     ))}
                 </MapView>
+                <View style={[styles.bubble, styles.latlng]}>
+                    <Text style={{ textAlign: 'center'}}>
+                        ${this.state.region.latitude.toPrecision(7)} + ', ' + ${this.state.region.longitude.toPrecision(7)} + ', ' +  ${this.state.region.latitudeDelta.toPrecision(5)} + ', ' +  ${this.state.region.longitudeDelta.toPrecision(5)}
+                     </Text>
+                </View>
+                <View style={styles.buttonContainer}>
+                    <TouchableOpacity onPress={() => this.createEvent()} style={[styles.bubble, styles.button]}>
+                        <Text>Create event</Text>
+                    </TouchableOpacity>
+                </View>
+
             </View>
         );
     };
@@ -213,6 +240,27 @@ const styles = StyleSheet.create({
         left: 0,
         right: 0,
         bottom: 0,
-    }
+    },
+    bubble: {
+        backgroundColor: 'rgba(255,255,255,0.7)',
+        paddingHorizontal: 18,
+        paddingVertical: 12,
+        borderRadius: 20,
+    },
+    latlng: {
+        width: 200,
+        alignItems: 'stretch',
+    },
+    button: {
+        width: 80,
+        paddingHorizontal: 12,
+        alignItems: 'center',
+        marginHorizontal: 10,
+    },
+    buttonContainer: {
+        flexDirection: 'row',
+        marginVertical: 20,
+        backgroundColor: 'transparent',
+    },
 });
 

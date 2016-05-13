@@ -8,7 +8,8 @@ const getDB = (env) => {
     case 'dev':
     default:
       return {
-        host: '192.168.1.35',
+        //host: 'georequest-app.meteorapp.com',
+        host: 'localhost',
         port: '3000'
       }
   }

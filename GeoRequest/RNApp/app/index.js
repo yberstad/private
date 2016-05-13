@@ -1,4 +1,6 @@
-import React, {Component} from 'react-native';
+import React, {
+    Dimensions,
+    Component} from 'react-native';
 
 import SignIn from './containers/signIn';
 //import SignOut from './containers/signOut';
@@ -6,11 +8,23 @@ import TestGeo from './containers/testGeo';
 
 import ddpClient from './ddp';
 
+var {width, height} = Dimensions.get('window');
+const earthRadiusInKM = 6371;
+const radiusInKM = 1.5;
+const deg2rad = Math.PI/180;
+const rad2deg = 180/Math.PI;
+const ASPECT_RATIO = width / height;
+const LATITUDE = 59.90651;
+const LONGITUDE = 10.62827;
+const LATITUDE_DELTA = 0.0922;
+const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
+
 export default class RNApp extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
+            region: null,
             connected: false,
             signedIn: false,
             locations: null,
@@ -55,8 +69,27 @@ export default class RNApp extends Component {
         }
         observer.removed = (id, oldValue) => {
             console.log('observe-removed: ' + JSON.stringify(ddpClient.collections.locations));
-            this.setState({locations: ddpClient.collections.locations})
+            _this.setState({locations: ddpClient.collections.locations})
         }
+        
+    }
+
+    onRegionSelect(region) {
+        this.setState({ region });
+    }
+
+    calculateNewRegion(longitude, latitude) {
+        var radiusInRad = radiusInKM / earthRadiusInKM;
+        var longitudeDelta = rad2deg(radiusInRad / Math.cos(deg2rad(latitude)));
+        var latitudeDelta = ASPECT_RATIO * rad2deg(radiusInRad);
+
+        var region = {
+            latitude,
+            longitude,
+            latitudeDelta,
+            longitudeDelta,
+        };
+        return region;
     }
 
     getMarkerList(collection) {
@@ -84,7 +117,7 @@ export default class RNApp extends Component {
         let {connected, signedIn} = this.state;
         if (connected && signedIn) {
             return (
-                <TestGeo markers={this.state.markers}/>
+                <TestGeo markers={this.state.markers} regionForEvent={this.state.region} createEventCallback={(region) => this.onRegionSelect(region)}/>
                 // <SignOut
                 //   changedSignedIn={(status) => this.handleSignedInStatus(status)}
                 //   />
