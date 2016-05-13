@@ -1,0 +1,9 @@
+{
+  "galaxy.meteor.com": {
+    "env": {
+      "ROOT_URL": "http://georequest-app.meteorapp.com",
+      "MONGO_URL": "mongodb://georequestadmin:dykk12@ds017812-a0.mlab.com:17812,ds017812-a1.mlab.com:17812/georequest-mongodb?replicaSet=rs-ds017812",
+      "MONGO_OPLOG_URL": "mongodb://oplog-reader:dykk12@ds017812-a0.mlab.com:17812,ds017812-a1.mlab.com:17812/local?replicaSet=rs-ds017812&authSource=admin"
+    }
+  }
+}
