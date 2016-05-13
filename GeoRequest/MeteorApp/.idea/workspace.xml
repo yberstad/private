@@ -2,14 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7dd27d0b-ab0f-4939-84e1-ebb4df25b74f" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/MeteorApp.iml" afterPath="$PROJECT_DIR$/.idea/MeteorApp.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/jsLibraryMappings.xml" afterPath="$PROJECT_DIR$/.idea/jsLibraryMappings.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../RNApp/app/config.js" afterPath="$PROJECT_DIR$/../RNApp/app/config.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../RNApp/app/containers/testGeo.js" afterPath="$PROJECT_DIR$/../RNApp/app/containers/testGeo.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../RNApp/app/index.js" afterPath="$PROJECT_DIR$/../RNApp/app/index.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../RNApp/ios/RNApp.xcodeproj/project.pbxproj" afterPath="$PROJECT_DIR$/../RNApp/ios/RNApp.xcodeproj/project.pbxproj" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../RNApp/ios/RNApp/AppDelegate.m" afterPath="$PROJECT_DIR$/../RNApp/ios/RNApp/AppDelegate.m" />
     </list>
     <ignored path="MeteorApp.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -354,12 +347,20 @@
       <workItem from="1462951482511" duration="260000" />
       <workItem from="1463081892601" duration="15000" />
       <workItem from="1463088756526" duration="581000" />
-      <workItem from="1463156226052" duration="205000" />
+      <workItem from="1463156226052" duration="239000" />
     </task>
+    <task id="LOCAL-00001" summary="After deploy to Galaxy">
+      <created>1463156550290</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1463156550290</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="37369000" />
+    <option name="totallyTimeSpent" value="37403000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1920" height="1200" extended-state="0" />
@@ -369,7 +370,7 @@
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="npm" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Version Control" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3286219" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32920355" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.30123675" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
@@ -394,6 +395,10 @@
   </component>
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="After deploy to Galaxy" />
+    <option name="LAST_COMMIT_MESSAGE" value="After deploy to Galaxy" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
