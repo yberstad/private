@@ -1,10 +1,25 @@
 import { Meteor } from 'meteor/meteor';
-var Random = require('meteor-random');
-// var btoa = require('btoa');
-import { ReactiveAggregate } from 'meteor/jcbernack:reactive-aggregate';
 
 Meteor.startup(() => {
-  // code to run on server at startup
+ // code to run on server at startup
+});
+
+Meteor.methods({
+    'addEvent': function(event) {
+        event.createdBy = (Meteor.userId()) ? Meteor.userId() : '';
+        event.timestamp = new Date(location.timestamp);
+        Events.schema.validate(event);
+        Events.insert(event);
+    }
+});
+
+Meteor.methods({
+    'addPosition': function(position) {
+        position.createdBy = (Meteor.userId()) ? Meteor.userId() : '';
+        position.timestamp = new Date(location.timestamp);
+        Positions.schema.validate(position);
+        Positions.insert(position);
+    }
 });
 
 Meteor.publish('locations', function(geoRequestId) {
@@ -73,69 +88,3 @@ Meteor.publish('locations', function(geoRequestId) {
         handle.stop();
     });
 });
-
-// Meteor.publish('locations', function(geoRequestId) {
-//     var _this = this;
-//     if (!this.userId) {
-//         return this.ready();
-//     }
-//
-//     var pipeline = [
-//         {$match: {geoRequestId: geoRequestId}},
-//         {$sort: {insertedBy: 1, timestamp: 1}},
-//         {$group: {_id: "$insertedBy", timestamp: {$last: "$timestamp" }}}
-//     ];
-//
-//     ReactiveAggregate(_this, Locations, pipeline);
-// });
-// Meteor.publish('locationsAggregate', function(geoRequestId) {
-//     var _this = this;
-//     if (!this.userId) {
-//         return this.ready();
-//     }
-//
-//     // return Locations.rawCollection().aggregate(
-//     //     { $sort: { insertedBy: 1, timestamp: 1 } },
-//     //     {
-//     //         $group:
-//     //         {
-//     //             user: "insertedBy",
-//     //             timestamp: { $last: "$timestamp" },
-//     //             longitude: 1,
-//     //             latitude: 1
-//     //         }
-//     //     }
-//     // );
-//
-//     var pipeline = [
-//         {$match: {geoRequestId: geoRequestId}},
-//         {$sort: {insertedBy: 1, timestamp: 1}},
-//         {$group: {_id: "$insertedBy", timestamp: {$last: "$timestamp" }}}
-//     ];
-//
-//     var matchedLocations =  Locations.aggregate(pipeline);
-//     _(matchedLocations).forEach(function(location){
-//         _this.added('locationsAggregate', Random.id(), location)
-//     });
-//
-//     _this.ready();
-//
-//
-//     // return Locations.find({
-//     //     geoRequestId: geoRequestId
-//     // }, {
-//     //     fields: {longitude: 1, latitude: 1, timestamp: 1, insertedBy: 1}
-//     // });
-// });
-
-// Meteor.publish('locations', function(geoRequestId) {
-//     if (!this.userId) {
-//         return this.ready();
-//     }
-//
-//     return Locations.find({
-//         geoRequestId: geoRequestId
-//     }, {
-//         fields: {longitude: 1, latitude: 1, timestamp: 1, insertedBy: 1}
-//     });
-// });
