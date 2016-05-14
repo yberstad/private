@@ -27,6 +27,9 @@ Events.schema = new SimpleSchema({
     startTime: {
         type: Date
     },
+    schedule: {
+        type: [String]
+    },
     displayPositionOfCreator: {
         type: Boolean
     },
