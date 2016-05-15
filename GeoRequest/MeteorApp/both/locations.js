@@ -39,7 +39,7 @@ Events.schema = new SimpleSchema({
     region:{
         type: Object
     },
-    'region.showAllUsers': {
+    'region.zoomToShowAllUsers': {
         type: Boolean
     },
     'region.longitudeDelta': {
