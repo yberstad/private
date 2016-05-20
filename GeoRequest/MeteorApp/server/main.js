@@ -2,6 +2,7 @@ import { Meteor } from 'meteor/meteor';
 
 Meteor.startup(() => {
  // code to run on server at startup
+    Events._ensureIndex({ "location": "2dsphere"});
 });
 
 Meteor.methods({
@@ -9,7 +10,7 @@ Meteor.methods({
         if (!Meteor.userId()) {
             return null;
         }
-        return Events.find({ participants: Meteor.userId()});
+        return Events.find({ "participants.userId": Meteor.userId()});
     }
 });
 
@@ -25,7 +26,7 @@ Meteor.methods({
 Meteor.methods({
     'addEvent': function(event) {
         event.createdBy = (Meteor.userId()) ? Meteor.userId() : '';
-        event.timestamp = new Date(location.timestamp);
+        event.timestamp = new Date();
         Events.schema.validate(event);
         Events.insert(event);
     }
@@ -34,7 +35,7 @@ Meteor.methods({
 Meteor.methods({
     'addPosition': function(position) {
         position.createdBy = (Meteor.userId()) ? Meteor.userId() : '';
-        position.timestamp = new Date(location.timestamp);
+        position.timestamp = new Date();
         Positions.schema.validate(position);
         Positions.insert(position);
     }

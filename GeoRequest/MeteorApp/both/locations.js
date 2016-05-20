@@ -22,7 +22,16 @@ Events.schema = new SimpleSchema({
         optional: false
     },
     participants: {
-        type: [String]
+        type: [Object]
+    },
+    "participants.$.userId": {
+        type: String
+    },
+    "participants.$.acknowledged": {
+        type: Boolean
+    },
+    "participants.$.accepted": {
+    type: Boolean
     },
     startTime: {
         type: Date

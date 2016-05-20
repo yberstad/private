@@ -2,10 +2,11 @@ import React, {
     Dimensions,
     Component} from 'react-native';
 
+import {Scene, Router, Modal, TabBar} from 'react-native-router-flux';
 import SignIn from './containers/signIn';
-//import SignOut from './containers/signOut';
+import SignOut from './containers/signOut';
 import TestGeo from './containers/testGeo';
-
+import SelectLocation from './containers/selectLocation';
 import ddpClient from './ddp';
 
 var {width, height} = Dimensions.get('window');
@@ -14,10 +15,7 @@ const radiusInKM = 1.5;
 const deg2rad = Math.PI/180;
 const rad2deg = 180/Math.PI;
 const ASPECT_RATIO = width / height;
-const LATITUDE = 59.90651;
-const LONGITUDE = 10.62827;
-const LATITUDE_DELTA = 0.0922;
-const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
+
 
 export default class RNApp extends Component {
     constructor(props) {
@@ -28,8 +26,15 @@ export default class RNApp extends Component {
             connected: false,
             signedIn: false,
             locations: null,
-            markers: []
+            markers: [],
+            error: null
         };
+
+        Date.prototype.addHours= function(h){
+            var copiedDate = new Date(this.getTime());
+            copiedDate.setHours(copiedDate.getHours()+h);
+            return copiedDate;
+        }
     }
 
     componentWillMount() {
@@ -74,8 +79,46 @@ export default class RNApp extends Component {
         
     }
 
-    onRegionSelect(region) {
-        this.setState({ region });
+    onCreateEvent(region) {
+        var event = {};
+        event.title = "Vil du komme på middag?";
+        event.description = "Kl 1900 hos meg... :-)";
+        event.location = {
+            type: "Point",
+            coordinates: [region.longitude, region.latitude]
+        };
+
+        var user1 = {
+            userId: "userid1",
+            acknowledged: true,
+            accepted: true
+        };
+        var user2 = {
+            userId: "userid2",
+            acknowledged: true,
+            accepted: true
+        };
+        event.participants = [];
+        event.participants.push(user1);
+        event.participants.push(user2);
+
+        event.startTime = new Date().addHours(1);
+        event.displayPositionOfCreator = true;
+        event.displayPositionForAllParticipants = true;
+        event.region = {
+            zoomToShowAllUsers: false,
+            longitudeDelta: region.latitudeDelta,
+            latitudeDelta: region.latitudeDelta
+        };
+        event.schedule = [];
+        ddpClient.addEvent(event, (error, res) => {
+            if (error) {
+                console.log(error);
+                //this.setState({error: error.reason})
+            } else {
+                console.log(res);
+            }
+        });
     }
 
     calculateNewRegion(longitude, latitude) {
@@ -117,7 +160,8 @@ export default class RNApp extends Component {
         let {connected, signedIn} = this.state;
         if (connected && signedIn) {
             return (
-                <TestGeo markers={this.state.markers} regionForEvent={this.state.region} createEventCallback={(region) => this.onRegionSelect(region)}/>
+                <SelectLocation createEventCallback={(region) => this.onCreateEvent(region)}/>
+                // <TestGeo markers={this.state.markers} regionForEvent={this.state.region} createEventCallback={(region) => this.onRegionSelect(region)}
                 // <SignOut
                 //   changedSignedIn={(status) => this.handleSignedInStatus(status)}
                 //   />
@@ -130,5 +174,16 @@ export default class RNApp extends Component {
                 />
             );
         }
+
+        // return <Router sceneStyle={{backgroundColor:'#F7F7F7'}}>
+        //     <Scene key="modal" component={Modal} >
+        //         <Scene key="root" hideNavBar={true}>
+        //             <Scene key="signIn" component={SignIn} title="SignIn" connected={connected} changedSignedIn={(status) => this.handleSignedInStatus(status)}/>
+        //             <Scene key="signOut" component={SignOut} title="SignOut" duration={1} changedSignedIn={(status) => this.handleSignedInStatus(status)}/>
+        //             <Scene key="home" component={TestGeo} title="TestGeo" type="replace"/>
+        //         </Scene>
+        //         <Scene key="error" component={Error}/>
+        //     </Scene>
+        // </Router>;
     }
 }

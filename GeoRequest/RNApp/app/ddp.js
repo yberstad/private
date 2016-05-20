@@ -146,4 +146,8 @@ ddpClient.user = () => {
     });
 };
 
+ddpClient.addEvent = (event, cb) => {
+  return ddpClient.call("addEvent", [event], cb);
+};
+
 export default ddpClient;
